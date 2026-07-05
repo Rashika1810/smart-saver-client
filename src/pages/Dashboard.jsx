@@ -1,11 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { toast } from "react-toastify";import StatsCards from "../components/dashboard/StatsCard";
+import { toast } from "react-toastify";
+import StatsCards from "../components/dashboard/StatsCard";
 import Filters from "../components/dashboard/Filters";
 import TransactionTable from "../components/dashboard/TransactionTable";
 import Analytics from "./Analytics";
 import api from "../api/axios";
-;
-
 export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [view, setView] = useState("table");
@@ -28,19 +27,16 @@ export default function Dashboard() {
 
       const params = {};
 
-      if (filters.frequency !== "all")
-        params.frequency = filters.frequency;
+      if (filters.frequency !== "all") params.frequency = filters.frequency;
 
-      if (filters.type !== "all")
-        params.type = filters.type;
+      if (filters.type !== "all") params.type = filters.type;
 
-      if (filters.category !== "all")
-        params.category = filters.category;
+      if (filters.category !== "all") params.category = filters.category;
 
       const { data } = await api.get("/transactions", { params });
 
       setTransactions(data?.data || []);
-    // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       toast.error("Failed to load transactions");
     } finally {
@@ -56,28 +52,19 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black px-4 py-6">
-
       <div className="max-w-6xl mx-auto">
-
         {/* HEADER */}
         <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-gray-400">
-          Track your expenses smartly
-        </p>
 
-        {/* STATS */}
+        <p className="text-gray-400">Track your expenses smartly</p>
+
         <StatsCards transactions={transactions} />
 
         {/* FILTERS */}
-        <Filters
-          filters={filters}
-          setFilters={setFilters}
-          setView={setView}
-        />
+        <Filters filters={filters} setFilters={setFilters} setView={setView} />
 
         {/* CONTENT */}
         <div className="mt-6">
-
           {/* LOADING */}
           {loading && (
             <div className="text-center text-gray-400 py-10">
@@ -105,9 +92,7 @@ export default function Dashboard() {
               )}
             </>
           )}
-
         </div>
-
       </div>
     </div>
   );

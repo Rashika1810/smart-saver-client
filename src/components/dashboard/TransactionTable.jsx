@@ -1,13 +1,20 @@
 import { toast } from "react-toastify";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import ConfirmModal from "../common/ConfirmModal";
 
 export default function TransactionTable({ data, refresh }) {
   const navigate = useNavigate();
-  const handleDelete = async (id) => {
+  const [deleteId, setDeleteId] = useState(null);
+  const handleDelete = async () => {
     try {
-      await api.delete(`/transactions/${id}`);
-      toast.success("Deleted");
+      await api.delete(`/transactions/${deleteId}`);
+
+      toast.success("Transaction deleted successfully.");
+
+      setDeleteId(null);
+
       refresh();
     } catch {
       toast.error("Delete failed");
@@ -59,8 +66,8 @@ export default function TransactionTable({ data, refresh }) {
                 </button>
 
                 <button
-                  onClick={() => handleDelete(t._id)}
-                  className="text-red-400"
+                  onClick={() => setDeleteId(t._id)}
+                  className="text-red-400 hover:text-red-300 transition"
                 >
                   Delete
                 </button>
@@ -69,6 +76,15 @@ export default function TransactionTable({ data, refresh }) {
           ))}
         </tbody>
       </table>
+      <ConfirmModal
+        isOpen={deleteId !== null}
+        title="Delete Transaction"
+        message="Are you sure you want to delete this transaction? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteId(null)}
+      />
     </div>
   );
 }
