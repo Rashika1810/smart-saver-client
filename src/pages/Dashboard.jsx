@@ -8,6 +8,11 @@ import api from "../api/axios";
 export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [view, setView] = useState("table");
+  const [summary, setSummary] = useState({
+    income: 0,
+    expense: 0,
+    balance: 0,
+  });
 
   const [filters, setFilters] = useState({
     month: "all",
@@ -25,6 +30,38 @@ export default function Dashboard() {
   });
 
   const [loading, setLoading] = useState(false);
+  const fetchSummary = useCallback(async () => {
+    try {
+      const params = {};
+
+      // Apply the same filters to summary
+      if (filters.year) params.year = filters.year;
+
+      if (filters.month !== "all") {
+        params.month = filters.month;
+      }
+
+      if (filters.type !== "all") {
+        params.type = filters.type;
+      }
+
+      if (filters.category !== "all") {
+        params.category = filters.category;
+      }
+
+      if (filters.search?.trim()) {
+        params.search = filters.search;
+      }
+
+      const { data } = await api.get("/transactions/summary", {
+        params,
+      });
+
+      setSummary(data.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [filters]);
 
   // ---------------- FETCH TRANSACTIONS ----------------
   const fetchTransactions = useCallback(async () => {
@@ -64,7 +101,7 @@ export default function Dashboard() {
 
       setTransactions(data.data || []);
       setPagination(data.pagination);
-    // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       toast.error("Failed to load transactions");
     } finally {
@@ -80,7 +117,8 @@ export default function Dashboard() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTransactions();
-  }, [fetchTransactions]);
+    fetchSummary();
+  }, [fetchTransactions, fetchSummary]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black px-4 py-6">
@@ -90,7 +128,7 @@ export default function Dashboard() {
 
         <p className="text-gray-400">Track your expenses smartly</p>
 
-        <StatsCards transactions={transactions} />
+        <StatsCards summary={summary} />
 
         {/* FILTERS */}
         <Filters filters={filters} setFilters={setFilters} setView={setView} />
