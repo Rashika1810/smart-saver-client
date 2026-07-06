@@ -5,11 +5,14 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const u = JSON.parse(localStorage.getItem("user"));
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+
+  if (storedUser) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (u) setUser(u);
-  }, []);
+    setUser(JSON.parse(storedUser));
+  }
+}, []);
 
   const logout = () => {
     localStorage.removeItem("token");

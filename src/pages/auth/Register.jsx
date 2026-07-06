@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
@@ -59,7 +59,7 @@ const Register = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-black via-gray-900 to-black">
+    <div className="min-h-screen flex">
       {/* LEFT BRAND PANEL */}
       <div className="hidden md:flex w-1/2 flex-col justify-center px-16 text-white">
         <h1 className="text-5xl font-bold leading-tight">

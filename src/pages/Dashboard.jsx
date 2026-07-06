@@ -5,6 +5,7 @@ import Filters from "../components/dashboard/Filters";
 import TransactionTable from "../components/dashboard/TransactionTable";
 import Analytics from "./Analytics";
 import api from "../api/axios";
+import TransactionTableSkeleton from "../components/dashboard/TransactionTableSkeleton";
 export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [view, setView] = useState("table");
@@ -26,42 +27,20 @@ export default function Dashboard() {
     page: 1,
     pages: 1,
     total: 0,
-    limit: 10,
+    limit: 5,
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(false);
   const fetchSummary = useCallback(async () => {
     try {
-      const params = {};
-
-      // Apply the same filters to summary
-      if (filters.year) params.year = filters.year;
-
-      if (filters.month !== "all") {
-        params.month = filters.month;
-      }
-
-      if (filters.type !== "all") {
-        params.type = filters.type;
-      }
-
-      if (filters.category !== "all") {
-        params.category = filters.category;
-      }
-
-      if (filters.search?.trim()) {
-        params.search = filters.search;
-      }
-
-      const { data } = await api.get("/transactions/summary", {
-        params,
-      });
+      const { data } = await api.get("/transactions/summary");
 
       setSummary(data.data);
     } catch (err) {
       console.error(err);
     }
-  }, [filters]);
+  }, []);
 
   // ---------------- FETCH TRANSACTIONS ----------------
   const fetchTransactions = useCallback(async () => {
@@ -69,31 +48,22 @@ export default function Dashboard() {
     if (!user) return;
 
     try {
-      setLoading(true);
+      if (transactions.length === 0) {
+        setLoading(true);
+      } else {
+        setPageLoading(true);
+      }
 
       const params = {
         page,
-        limit: 10,
-
-        // Always send year
+        limit: 5,
         year: filters.year,
       };
 
-      if (filters.month !== "all") {
-        params.month = filters.month;
-      }
-
-      if (filters.type !== "all") {
-        params.type = filters.type;
-      }
-
-      if (filters.category !== "all") {
-        params.category = filters.category;
-      }
-
-      if (filters.search.trim()) {
-        params.search = filters.search;
-      }
+      if (filters.month !== "all") params.month = filters.month;
+      if (filters.type !== "all") params.type = filters.type;
+      if (filters.category !== "all") params.category = filters.category;
+      if (filters.search.trim()) params.search = filters.search;
 
       const { data } = await api.get("/transactions", {
         params,
@@ -101,13 +71,13 @@ export default function Dashboard() {
 
       setTransactions(data.data || []);
       setPagination(data.pagination);
-      // eslint-disable-next-line no-unused-vars
-    } catch (err) {
+    } catch {
       toast.error("Failed to load transactions");
     } finally {
       setLoading(false);
+      setPageLoading(false);
     }
-  }, [filters, page]);
+  }, [filters, page, transactions.length]);
 
   // ---------------- INITIAL LOAD ----------------
   useEffect(() => {
@@ -121,45 +91,87 @@ export default function Dashboard() {
   }, [fetchTransactions, fetchSummary]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black px-4 py-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="px-4 py-8">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* HEADER */}
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <div className="mb-2">
+          <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
 
-        <p className="text-gray-400">Track your expenses smartly</p>
-
+          <p className="mt-2 text-gray-400">
+            Track your income and expenses with ease.
+          </p>
+        </div>
         <StatsCards summary={summary} />
 
         {/* FILTERS */}
-        <Filters filters={filters} setFilters={setFilters} setView={setView} />
+        <div className="sticky top-4 z-20 rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl p-5 shadow-xl">
+          <Filters
+            filters={filters}
+            setFilters={setFilters}
+            setView={setView}
+          />
+        </div>
 
         {/* CONTENT */}
-        <div className="mt-6">
-          {/* LOADING */}
-          {loading && (
-            <div className="text-center text-gray-400 py-10">
-              Loading transactions...
-            </div>
-          )}
+        <div className="space-y-6">
+          {loading ? (
+            <TransactionTableSkeleton />
+          ) : transactions.length === 0 ? (
+            <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-16 text-center shadow-lg">
+              <h2 className="mt-4 text-2xl font-semibold">
+                No Transactions Found
+              </h2>
 
-          {/* EMPTY STATE */}
-          {!loading && transactions.length === 0 && (
-            <div className="text-center text-gray-500 py-10">
-              No transactions found. Add your first transaction 🚀
+              <p className="mt-3 text-gray-400">
+                Try changing your filters or add a new transaction.
+              </p>
             </div>
-          )}
-
-          {/* DATA VIEW */}
-          {!loading && transactions.length > 0 && (
+          ) : (
             <>
               {view === "table" ? (
-                <TransactionTable
-                  data={transactions}
-                  refresh={fetchTransactions}
-                  page={page}
-                  setPage={setPage}
-                  pagination={pagination}
-                />
+                <>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl px-5 py-3 mb-4">
+                    <p className="text-sm text-gray-400">
+                      Showing{" "}
+                      <span className="font-semibold text-white">
+                        {(pagination.page - 1) * pagination.limit + 1}
+                      </span>
+                      {" - "}
+                      <span className="font-semibold text-white">
+                        {Math.min(
+                          pagination.page * pagination.limit,
+                          pagination.total,
+                        )}
+                      </span>{" "}
+                      of{" "}
+                      <span className="font-semibold text-white">
+                        {pagination.total}
+                      </span>{" "}
+                      transactions
+                    </p>
+
+                    <p className="text-sm text-gray-400">
+                      Page{" "}
+                      <span className="font-semibold text-white">
+                        {pagination.page}
+                      </span>{" "}
+                      of{" "}
+                      <span className="font-semibold text-white">
+                        {pagination.pages}
+                      </span>
+                    </p>
+                  </div>
+
+                  <TransactionTable
+                    data={transactions}
+                    refresh={fetchTransactions}
+                    refreshSummary={fetchSummary}
+                    page={page}
+                    setPage={setPage}
+                    pagination={pagination}
+                    pageLoading={pageLoading}
+                  />
+                </>
               ) : (
                 <Analytics allTransactions={transactions} />
               )}

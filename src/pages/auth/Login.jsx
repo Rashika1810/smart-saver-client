@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
@@ -43,17 +43,16 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-black via-gray-900 to-black">
-
+    <div className="min-h-screen flex">
       {/* LEFT BRAND PANEL */}
       <div className="hidden md:flex w-1/2 flex-col justify-center px-16 text-white">
-        
         <h1 className="text-5xl font-bold leading-tight">
           Track your <span className="text-green-400">Money</span> smarter 💰
         </h1>
 
         <p className="text-gray-400 mt-4 text-lg">
-          Manage expenses, monitor income, and take control of your financial life with ease.
+          Manage expenses, monitor income, and take control of your financial
+          life with ease.
         </p>
 
         <div className="mt-8 space-y-3 text-gray-300">
@@ -69,14 +68,10 @@ const Login = () => {
 
       {/* RIGHT LOGIN PANEL */}
       <div className="w-full md:w-1/2 flex items-center justify-center px-6">
-
         <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8">
-
           {/* HEADER */}
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-white">
-              Welcome Back
-            </h2>
+            <h2 className="text-3xl font-bold text-white">Welcome Back</h2>
             <p className="text-gray-400 text-sm mt-1">
               Login to your expense dashboard
             </p>
@@ -84,7 +79,6 @@ const Login = () => {
 
           {/* FORM */}
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-
             <div>
               <label className="text-sm text-gray-400">Email</label>
               <input
@@ -130,7 +124,6 @@ const Login = () => {
               Create account
             </Link>
           </p>
-
         </div>
       </div>
     </div>
