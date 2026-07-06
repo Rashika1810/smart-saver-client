@@ -7,6 +7,8 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import AddTransaction from "./components/transactions/AddTransaction";
 import EditTransaction from "./components/transactions/EditTransaction";
+import RecurringTransactions from "./pages/RecurringTransactions";
+import NotFoundPage from "./pages/auth/NotFoundPage";
 
 // import NotFoundPage from "./pages/NotFoundPage";
 
@@ -45,7 +47,17 @@ function App() {
     </ProtectedRoutes>
   }
 />
-        {/* <Route path="*" element={<NotFoundPage />} /> */}
+<Route
+  path="/recurring"
+  element={
+    <ProtectedRoutes>
+      <Navbar />
+      <RecurringTransactions />
+      <Footer />
+    </ProtectedRoutes>
+  }
+/>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       <ToastContainer />

@@ -10,9 +10,18 @@ export default function Dashboard() {
   const [view, setView] = useState("table");
 
   const [filters, setFilters] = useState({
-    frequency: "all",
+    month: "all",
+    year: new Date().getFullYear().toString(),
     type: "all",
     category: "all",
+    search: "",
+  });
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pages: 1,
+    total: 0,
+    limit: 10,
   });
 
   const [loading, setLoading] = useState(false);
@@ -25,26 +34,49 @@ export default function Dashboard() {
     try {
       setLoading(true);
 
-      const params = {};
+      const params = {
+        page,
+        limit: 10,
 
-      if (filters.frequency !== "all") params.frequency = filters.frequency;
+        // Always send year
+        year: filters.year,
+      };
 
-      if (filters.type !== "all") params.type = filters.type;
+      if (filters.month !== "all") {
+        params.month = filters.month;
+      }
 
-      if (filters.category !== "all") params.category = filters.category;
+      if (filters.type !== "all") {
+        params.type = filters.type;
+      }
 
-      const { data } = await api.get("/transactions", { params });
+      if (filters.category !== "all") {
+        params.category = filters.category;
+      }
 
-      setTransactions(data?.data || []);
-      // eslint-disable-next-line no-unused-vars
+      if (filters.search.trim()) {
+        params.search = filters.search;
+      }
+
+      const { data } = await api.get("/transactions", {
+        params,
+      });
+
+      setTransactions(data.data || []);
+      setPagination(data.pagination);
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       toast.error("Failed to load transactions");
     } finally {
       setLoading(false);
     }
-  }, [filters.frequency, filters.type, filters.category]);
+  }, [filters, page]);
 
   // ---------------- INITIAL LOAD ----------------
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPage(1);
+  }, [filters]);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTransactions();
@@ -86,6 +118,9 @@ export default function Dashboard() {
                 <TransactionTable
                   data={transactions}
                   refresh={fetchTransactions}
+                  page={page}
+                  setPage={setPage}
+                  pagination={pagination}
                 />
               ) : (
                 <Analytics allTransactions={transactions} />

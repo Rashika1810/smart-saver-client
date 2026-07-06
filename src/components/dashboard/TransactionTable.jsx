@@ -3,8 +3,15 @@ import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ConfirmModal from "../common/ConfirmModal";
+import { formatDate } from "../../utils/date";
 
-export default function TransactionTable({ data, refresh }) {
+export default function TransactionTable({
+  data,
+  refresh,
+  page,
+  setPage,
+  pagination,
+}) {
   const navigate = useNavigate();
   const [deleteId, setDeleteId] = useState(null);
   const handleDelete = async () => {
@@ -41,7 +48,7 @@ export default function TransactionTable({ data, refresh }) {
         <tbody>
           {data.map((t) => (
             <tr key={t._id} className="border-t border-white/10">
-              <td className="p-3">{t.date}</td>
+              <td className="p-3">{formatDate(t.date)}</td>
 
               <td className="p-3">₹{t.amount}</td>
 
@@ -76,6 +83,27 @@ export default function TransactionTable({ data, refresh }) {
           ))}
         </tbody>
       </table>
+      <div className="flex justify-between items-center mt-6">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+          className="px-4 py-2 bg-gray-700 rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+
+        <span>
+          Page {pagination.page} of {pagination.pages}
+        </span>
+
+        <button
+          disabled={page === pagination.pages}
+          onClick={() => setPage(page + 1)}
+          className="px-4 py-2 bg-gray-700 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
       <ConfirmModal
         isOpen={deleteId !== null}
         title="Delete Transaction"
