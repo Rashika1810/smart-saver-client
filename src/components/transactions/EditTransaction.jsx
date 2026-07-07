@@ -18,38 +18,31 @@ export default function EditTransaction() {
   const [form, setForm] = useState(initialState);
   const [loading, setLoading] = useState(true);
 
-  // ---------------- FETCH SINGLE TRANSACTION ----------------
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    fetchTransaction();
+  }, [id]);
+
   const fetchTransaction = async () => {
     try {
-      setLoading(true);
-
       const { data } = await api.get(`/transactions/${id}`);
 
-      if (data?.data) {
-        const t = data.data;
+      const t = data.data;
 
-        setForm({
-          amount: t.amount || "",
-          type: t.type || "",
-          category: t.category || "",
-          description: t.description || "",
-          date: t.date ? t.date.split("T")[0] : "",
-        });
-      }
-    // eslint-disable-next-line no-unused-vars
-    } catch (err) {
-      toast.error("Failed to load transaction");
+      setForm({
+        amount: t.amount || "",
+        type: t.type || "",
+        category: t.category || "",
+        description: t.description || "",
+        date: t.date?.split("T")[0] || "",
+      });
+    } catch {
+      toast.error("Unable to load transaction.");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchTransaction();
-  }, [id]);
-
-  // ---------------- HANDLE CHANGE ----------------
   const handleChange = (e) => {
     setForm((prev) => ({
       ...prev,
@@ -57,109 +50,193 @@ export default function EditTransaction() {
     }));
   };
 
-  // ---------------- UPDATE ----------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const { data } = await api.put(`/transactions/${id}`, {
+      await api.put(`/transactions/${id}`, {
         ...form,
-        type: form.type.toLowerCase(),
+        amount: Number(form.amount),
       });
 
-      if (data?.success) {
-        toast.success("Transaction updated 🚀");
+      toast.success("Transaction updated");
 
-        setTimeout(() => {
-          navigate("/");
-        }, 500);
-      } else {
-        toast.error(data?.message || "Update failed");
-      }
-    // eslint-disable-next-line no-unused-vars
-    } catch (err) {
-      toast.error("Server error");
+      navigate("/transactions");
+    } catch {
+      toast.error("Failed to update transaction");
     }
   };
 
   if (loading) {
     return (
-      <div className="text-center text-gray-400 mt-10">
+      <div className="max-w-xl mx-auto px-6 py-12">
         Loading transaction...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black px-4 py-10">
+    <div className="max-w-3xl mx-auto px-6 py-8">
 
-      <div className="max-w-xl mx-auto">
-
-        <h1 className="text-3xl font-bold mb-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-semibold">
           Edit Transaction
         </h1>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4 p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl"
-        >
+        <p className="text-zinc-400 mt-2">
+          Update your transaction details.
+        </p>
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-5 rounded-xl border border-zinc-800 bg-zinc-900 p-6"
+      >
+
+        {/* Amount */}
+
+        <div>
+          <label className="block mb-2 text-sm text-zinc-400">
+            Amount
+          </label>
 
           <input
+            type="number"
             name="amount"
+            min="1"
+            step="0.01"
             value={form.amount}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10"
+            placeholder="e.g. 1500"
+            required
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 outline-none focus:border-blue-500"
           />
+        </div>
+
+        {/* Type */}
+
+        <div>
+          <label className="block mb-2 text-sm text-zinc-400">
+            Transaction Type
+          </label>
 
           <select
             name="type"
             value={form.type}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10"
+            required
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3"
           >
-            <option value="">Select Type</option>
+            <option value="">Choose transaction type</option>
             <option value="income">Income</option>
             <option value="expense">Expense</option>
           </select>
+        </div>
+
+        {/* Category */}
+
+        <div>
+          <label className="block mb-2 text-sm text-zinc-400">
+            Category
+          </label>
 
           <select
             name="category"
             value={form.category}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10"
+            required
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3"
           >
-            <option value="">Category</option>
-            <option value="salary">Salary</option>
-            <option value="food">Food</option>
-            <option value="bills">Bills</option>
-            <option value="travel">Travel</option>
-            <option value="other">Other</option>
+            <option value="">Choose category</option>
+
+            <optgroup label="Income">
+              <option value="salary">Salary</option>
+              <option value="freelance">Freelance</option>
+              <option value="business">Business</option>
+              <option value="investment">Investment</option>
+              <option value="bonus">Bonus</option>
+              <option value="gift">Gift</option>
+              <option value="refund">Refund</option>
+              <option value="other-income">Other Income</option>
+            </optgroup>
+
+            <optgroup label="Expense">
+              <option value="food">Food</option>
+              <option value="groceries">Groceries</option>
+              <option value="shopping">Shopping</option>
+              <option value="travel">Travel</option>
+              <option value="transport">Transport</option>
+              <option value="fuel">Fuel</option>
+              <option value="bills">Bills</option>
+              <option value="rent">Rent</option>
+              <option value="utilities">Utilities</option>
+              <option value="health">Healthcare</option>
+              <option value="education">Education</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="insurance">Insurance</option>
+              <option value="subscription">Subscriptions</option>
+              <option value="tax">Tax</option>
+              <option value="charity">Charity</option>
+              <option value="other-expense">Other Expense</option>
+            </optgroup>
           </select>
+        </div>
+
+        {/* Date */}
+
+        <div>
+          <label className="block mb-2 text-sm text-zinc-400">
+            Date
+          </label>
 
           <input
-            name="date"
             type="date"
+            name="date"
             value={form.date}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10"
+            required
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3"
           />
+        </div>
 
-          <input
+        {/* Description */}
+
+        <div>
+          <label className="block mb-2 text-sm text-zinc-400">
+            Description
+          </label>
+
+          <textarea
+            rows={3}
             name="description"
             value={form.description}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10"
+            placeholder="Optional note (e.g. Dinner with friends)"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 resize-none"
           />
+        </div>
+
+        <div className="flex gap-4 pt-2">
+
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="flex-1 rounded-lg border border-zinc-700 py-3 hover:bg-zinc-800"
+          >
+            Cancel
+          </button>
 
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 font-semibold"
+            className="flex-1 rounded-lg bg-blue-600 py-3 font-medium hover:bg-blue-700"
           >
             Update Transaction
           </button>
 
-        </form>
-      </div>
+        </div>
+
+      </form>
+
     </div>
   );
 }

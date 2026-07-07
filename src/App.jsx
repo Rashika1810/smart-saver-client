@@ -11,6 +11,8 @@ import NotFoundPage from "./pages/auth/NotFoundPage";
 import AuthLayout from "./components/layout/AuthLayout";
 import HomeLayout from "./components/layout/HomeLayout";
 import VerifyEmail from "./pages/auth/VerifyEmail";
+import Analytics from "./pages/Analytics";
+import Transactions from "./pages/Transactions";
 
 function App() {
   return (
@@ -26,14 +28,14 @@ function App() {
         {/* Protected Pages */}
         <Route element={<HomeLayout />}>
           <Route index element={<Dashboard />} />
-
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/analytics" element={<Analytics />} />
           <Route path="/add-transaction" element={<AddTransaction />} />
-
           <Route path="/edit-transaction/:id" element={<EditTransaction />} />
-
           <Route path="/recurring" element={<RecurringTransactions />} />
         </Route>
 
+        {/* 404 Page */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 

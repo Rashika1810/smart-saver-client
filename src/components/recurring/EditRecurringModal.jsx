@@ -25,24 +25,25 @@ export default function EditRecurringModal({ recurring, close, refresh }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
-      <div className="bg-gray-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Edit Recurring Transaction</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+      <div className="w-full max-w-xl rounded-xl border border-zinc-800 bg-zinc-900 shadow-xl max-h-[90vh] overflow-hidden">
+        <div className="flex items-center justify-between border-b border-zinc-800 px-6 py-4">
+          <h2 className="text-xl font-semibold"> Recurring Transaction</h2>
 
           <button
             onClick={close}
-            className="text-gray-400 hover:text-white text-xl"
+            className="text-zinc-400 hover:text-white text-xl"
           >
             ✕
           </button>
         </div>
-
-        <RecurringForm
-          initialData={recurring}
-          onSubmit={update}
-          loading={loading}
-        />
+        <div className="overflow-y-auto max-h-[calc(90vh-72px)] p-6">
+          <RecurringForm
+            initialData={recurring}
+            onSubmit={update}
+            loading={loading}
+          />
+        </div>
       </div>
     </div>
   );

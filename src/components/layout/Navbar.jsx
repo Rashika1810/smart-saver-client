@@ -1,18 +1,28 @@
-import { useState, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
+import { Menu, X, Plus } from "lucide-react";
 
 export default function Navbar() {
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
-useEffect(() => {
-  const storedUser = localStorage.getItem("user");
+  const [user, setUser] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  if (storedUser) {
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setUser(JSON.parse(storedUser));
-  }
-}, []);
+    setMobileOpen(false);
+  }, [location.pathname]);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -20,71 +30,132 @@ useEffect(() => {
     navigate("/login");
   };
 
+  const navClass = ({ isActive }) =>
+    `transition-colors pb-1 border-b-2 ${
+      isActive
+        ? "border-blue-500 text-white"
+        : "border-transparent text-gray-400 hover:text-white"
+    }`;
+
+  const mobileNavClass = ({ isActive }) =>
+    `rounded-lg px-3 py-2 transition ${
+      isActive ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-zinc-800"
+    }`;
+
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-black/30 border-b border-white/10">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+    <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-900/95 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
-        <Link
-          to="/"
-          className="text-2xl font-bold text-white hover:opacity-80 transition"
-        >
-          Smart Saver ⚡
+        <Link to="/" className="text-xl font-semibold tracking-tight">
+          Smart<span className="text-blue-400">Saver</span>
         </Link>
 
-        {/* Navigation */}
-        <div className="hidden md:flex items-center gap-6">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive
-                ? "text-blue-400 font-semibold"
-                : "text-gray-300 hover:text-white transition"
-            }
-          >
-            Dashboard
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center gap-8 md:flex">
+          <NavLink to="/" end className={navClass}>
+            Overview
           </NavLink>
 
-          <NavLink
-            to="/recurring"
-            className={({ isActive }) =>
-              isActive
-                ? "text-blue-400 font-semibold"
-                : "text-gray-300 hover:text-white transition"
-            }
-          >
+          <NavLink to="/transactions" className={navClass}>
+            Transactions
+          </NavLink>
+
+          <NavLink to="/analytics" className={navClass}>
+            Analytics
+          </NavLink>
+
+          <NavLink to="/recurring" className={navClass}>
             Recurring
           </NavLink>
+        </nav>
 
-          {/* Coming soon */}
-          <span className="text-gray-500 cursor-not-allowed">Budgets</span>
-
-          <span className="text-gray-500 cursor-not-allowed">Calendar</span>
-        </div>
-
-        {/* Right Side */}
-        <div className="flex items-center gap-3">
+        {/* Desktop Right */}
+        <div className="hidden items-center gap-3 md:flex">
           <button
             onClick={() => navigate("/add-transaction")}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-blue-700 font-semibold hover:scale-105 transition"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500"
           >
-            + Add
+            <Plus size={18} />
+            Add Transaction
           </button>
 
           {user && (
-            <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-sm">{user.name}</span>
+            <div className="rounded-lg border border-zinc-800 px-3 py-2 text-sm text-gray-300">
+              {user.name}
             </div>
           )}
 
           <button
             onClick={logout}
-            className="px-4 py-2 rounded-xl bg-red-500/10 text-red-400 border border-red-400/30 hover:bg-red-500/20 transition"
+            className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-gray-300 transition hover:bg-zinc-800 hover:text-white"
           >
             Logout
           </button>
         </div>
+
+        {/* Mobile Right */}
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={() => navigate("/add-transaction")}
+            className="rounded-lg bg-blue-600 p-2 transition hover:bg-blue-500"
+          >
+            <Plus size={18} />
+          </button>
+
+          <button
+            onClick={() => setMobileOpen((prev) => !prev)}
+            className="rounded-lg border border-zinc-700 p-2 transition hover:bg-zinc-800"
+          >
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
-    </nav>
+
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div className="border-t border-zinc-800 bg-zinc-900 md:hidden">
+          <div className="space-y-2 p-4">
+            <NavLink to="/" end className={mobileNavClass}>
+              Overview
+            </NavLink>
+
+            <NavLink to="/transactions" className={mobileNavClass}>
+              Transactions
+            </NavLink>
+
+            <NavLink to="/analytics" className={mobileNavClass}>
+              Analytics
+            </NavLink>
+
+            <NavLink to="/recurring" className={mobileNavClass}>
+              Recurring
+            </NavLink>
+
+            <div className="my-3 border-t border-zinc-800" />
+
+            {user && (
+              <div className="px-3 text-sm text-gray-400">
+                Signed in as
+                <div className="mt-1 font-medium text-white">{user.name}</div>
+              </div>
+            )}
+
+            <button
+              onClick={() => navigate("/add-transaction")}
+              className="w-full rounded-lg bg-blue-600 px-4 py-3 text-left font-medium transition hover:bg-blue-500"
+            >
+              + Add Transaction
+            </button>
+
+            <button
+              onClick={logout}
+              className="w-full rounded-lg border border-zinc-700 px-4 py-3 text-left text-gray-300 transition hover:bg-zinc-800 hover:text-white"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }

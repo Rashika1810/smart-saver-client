@@ -35,32 +35,26 @@ export default function RecurringCard({ recurring, refresh, onEdit }) {
       year: "numeric",
     });
 
-  const frequencyIcon = {
-    daily: "📅",
-    weekly: "🗓️",
-    monthly: "📆",
-    yearly: "🎉",
-  };
-
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 hover:border-blue-500 transition">
+    <div className="rounded-xl border border-white/10 bg-zinc-900 p-6 hover:border-zinc-700 transition">
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-2xl font-semibold">
+          <h2 className="text-xl font-semibold">
             {recurring.description || recurring.category}
           </h2>
 
-          <p className="text-gray-400 capitalize">{recurring.category}</p>
+          <p className="capitalize text-zinc-400">{recurring.category}</p>
         </div>
 
         <span
-          className={`px-3 py-1 rounded-full text-sm ${
-            recurring.active
-              ? "bg-green-500/20 text-green-400"
-              : "bg-red-500/20 text-red-400"
-          }`}
+          className={`px-3 py-1 rounded-full text-xs font-medium
+${
+  recurring.active
+    ? "bg-green-500/10 text-green-400"
+    : "bg-zinc-700 text-zinc-400"
+}`}
         >
-          {recurring.active ? "🟢 Active" : "🔴 Disabled"}
+          {recurring.active ? "Active" : "Inactive"}
         </span>
       </div>
 
@@ -68,50 +62,44 @@ export default function RecurringCard({ recurring, refresh, onEdit }) {
         <div>
           <p className="text-gray-500 text-sm">Amount</p>
 
-          <h3 className="text-3xl font-bold mt-1">₹{recurring.amount}</h3>
+          <h3 className="text-3xl font-bold mt-1">
+            ₹{Number(recurring.amount).toLocaleString()}
+          </h3>
         </div>
 
         <div className="text-right">
           <p
-            className={`font-semibold ${
-              recurring.type === "income" ? "text-green-400" : "text-red-400"
-            }`}
+            className={`font-semibold ${recurring.type.charAt(0).toUpperCase() + recurring.type.slice(1)}`}
           >
             {recurring.type}
           </p>
 
-          <p className="text-gray-400 mt-2">
-            {frequencyIcon[recurring.frequency]} {recurring.frequency}
+          <p className="text-zinc-400 text-sm mt-2">
+            Repeats {recurring.frequency}
           </p>
         </div>
       </div>
 
-      <div className="mt-6 border-t border-white/10 pt-5">
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-400">Starts</span>
+      <div className="flex justify-between text-sm border-t border-zinc-800 pt-4 mt-5">
+        <span className="text-zinc-500">Starts</span>
 
-          <span>{formatDate(recurring.startDate)}</span>
-        </div>
+        <span>{formatDate(recurring.startDate)}</span>
       </div>
-
       <div className="mt-6 flex gap-2">
         <button
           onClick={() => onEdit(recurring)}
-          className="flex-1 rounded-xl bg-blue-600 py-2 hover:bg-blue-700 transition"
+          className="rounded-lg px-4 py-2 text-sm bg-zinc-700 hover:bg-zinc-600"
         >
           Edit
         </button>
 
-        <button
-          onClick={toggleStatus}
-          className="flex-1 rounded-xl bg-yellow-600 py-2 hover:bg-yellow-700 transition"
-        >
+        <button onClick={toggleStatus} className="rounded-lg px-4 py-2 text-sm bg-zinc-700 hover:bg-zinc-600 ">
           {recurring.active ? "Disable" : "Enable"}
         </button>
 
         <button
           onClick={deleteRecurring}
-          className="flex-1 rounded-xl bg-red-600 py-2 hover:bg-red-700 transition"
+          className="rounded-lg px-4 py-2 text-sm bg-red-600 hover:bg-red-700"
         >
           Delete
         </button>

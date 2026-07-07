@@ -6,7 +6,6 @@ import AddRecurringModal from "../components/recurring/AddRecurringModal";
 import EditRecurringModal from "../components/recurring/EditRecurringModal";
 import { useNavigate } from "react-router-dom";
 
-
 export default function RecurringTransactions() {
   const [transactions, setTransactions] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
@@ -28,62 +27,57 @@ export default function RecurringTransactions() {
     fetchRecurring();
   }, []);
   const generateToday = async () => {
-  try {
+    try {
+      const { data } = await api.post("/recurring/run");
 
-    const { data } = await api.post("/recurring/run");
+      toast.success(data.message);
 
-    toast.success(data.message);
-
-    navigate("/");
-
-  } catch (error) {
-
-    toast.error(
-      error.response?.data?.message ||
-      "Generation failed"
-    );
-
-  }
-};
+      navigate("/");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Generation failed");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black px-5 py-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-semibold">Recurring Transactions</h1>
 
-  <h1 className="text-3xl font-bold">
-    Recurring Transactions
-  </h1>
+            <p className="mt-2 text-zinc-400">
+              Manage subscriptions, salaries and other repeating transactions.
+            </p>
+          </div>
 
-  <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={generateToday}
+              className="rounded-lg border border-green-700 bg-green-600 px-5 py-2.5 hover:bg-green-700"
+            >
+              Generate Today
+            </button>
 
-    <button
-      onClick={generateToday}
-      className="px-5 py-3 rounded-xl bg-green-600 hover:bg-green-700 transition"
-    >
-      ⚡ Generate Today
-    </button>
-
-    <button
-      onClick={() => setShowAdd(true)}
-      className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 transition"
-    >
-      + New Recurring
-    </button>
-
-  </div>
-
-</div>
+            <button
+              onClick={() => setShowAdd(true)}
+              className="rounded-lg bg-blue-600 px-5 py-2.5 hover:bg-blue-700"
+            >
+              + Add Recurring
+            </button>
+          </div>
+        </div>
 
         {transactions.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24">
-            <div className="text-7xl mb-6">🔄</div>
+            <div className="w-20 h-20 rounded-full bg-zinc-800 flex items-center justify-center text-3xl">
+    ↻
+</div>
 
             <h2 className="text-2xl font-bold">No Recurring Transactions</h2>
 
             <p className="text-gray-400 mt-2">
-              Create one and let Smart Saver manage repetitive expenses for you.
+              Create recurring transactions to automatically track regular income and expenses.
             </p>
 
             <button

@@ -25,8 +25,7 @@ export default function TransactionTable({
 
       setDeleteId(null);
 
-      refresh();
-      await refreshSummary();
+      await Promise.all([refresh(), refreshSummary?.()]);
     } catch {
       toast.error("Delete failed");
     }
@@ -38,7 +37,7 @@ export default function TransactionTable({
 
   return (
     <>
-      <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden shadow-xl">
+      <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900">
         {/* Loading Overlay */}
 
         {/* Only table scrolls */}
@@ -48,14 +47,26 @@ export default function TransactionTable({
           }`}
         >
           <table className="w-full text-left">
-            <thead className="sticky top-0 bg-gray-900 z-10 border-b border-white/10">
+            <thead className="sticky top-0 z-10 border-b border-zinc-800 bg-zinc-900">
               <tr>
-                <th className="px-5 py-4">Date</th>
-                <th className="px-5 py-4 text-right">Amount</th>
-                <th className="px-5 py-4">Type</th>
-                <th className="px-5 py-4">Category</th>
-                <th className="px-5 py-4">Description</th>
-                <th className="px-5 py-4 text-center">Actions</th>
+                <th className="px-5 py-4 text-sm font-semibold text-gray-400">
+                  Date
+                </th>
+                <th className="px-5 py-4 text-sm font-semibold text-gray-400 text-right">
+                  Amount
+                </th>
+                <th className="px-5 py-4 text-sm font-semibold text-gray-400">
+                  Type
+                </th>
+                <th className="px-5 py-4 text-sm font-semibold text-gray-400">
+                  Category
+                </th>
+                <th className="px-5 py-4 text-sm font-semibold text-gray-400">
+                  Description
+                </th>
+                <th className="px-5 py-4 text-sm font-semibold text-gray-400 text-center">
+                  Actions
+                </th>
               </tr>
             </thead>
 
@@ -63,7 +74,7 @@ export default function TransactionTable({
               {data.map((t) => (
                 <tr
                   key={t._id}
-                  className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                  className="border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors"
                 >
                   <td className="px-5 py-4 whitespace-nowrap">
                     {formatDate(t.date)}
@@ -87,18 +98,18 @@ export default function TransactionTable({
                     {t.description || "—"}
                   </td>
 
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4 text-sm font-semibold text-gray-400">
                     <div className="flex justify-center gap-4">
                       <button
                         onClick={() => handleEdit(t._id)}
-                        className="text-blue-400 hover:text-blue-300 transition"
+                        className="rounded-md border border-blue-500/30 px-3 py-1 text-sm text-blue-400 hover:bg-blue-500/10"
                       >
                         Edit
                       </button>
 
                       <button
                         onClick={() => setDeleteId(t._id)}
-                        className="text-red-400 hover:text-red-300 transition"
+                        className="rounded-md border border-red-500/30 px-3 py-1 text-sm text-red-400 hover:bg-red-500/10"
                       >
                         Delete
                       </button>
@@ -111,11 +122,11 @@ export default function TransactionTable({
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between border-t border-white/10 px-6 py-4 bg-black/20">
+        <div className="flex items-center justify-between border-t border-white/10 px-6 py-4 bg-zinc-900">
           <button
             disabled={page === 1 || pageLoading}
             onClick={() => setPage(page - 1)}
-            className="px-5 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-lg border border-zinc-700 px-4 py-2 hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             ← Previous
           </button>
@@ -128,7 +139,7 @@ export default function TransactionTable({
           <button
             disabled={page === pagination.pages || pageLoading}
             onClick={() => setPage(page + 1)}
-            className="px-5 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-lg border border-zinc-700 px-4 py-2 hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next →
           </button>

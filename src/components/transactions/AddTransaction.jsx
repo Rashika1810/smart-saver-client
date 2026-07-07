@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../../api/axios";
 import FavoriteQuickAdd from "../favorites/FavoriteQuickAdd";
+import {
+  expenseCategories,
+  incomeCategories,
+} from "../../utils/categories";
 
 const initialState = {
   amount: "",
@@ -14,10 +18,15 @@ const initialState = {
 };
 
 export default function AddTransaction() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState(initialState);
   const [highlight, setHighlight] = useState(false);
 
-  const navigate = useNavigate();
+  const categories =
+    form.type === "income"
+      ? incomeCategories
+      : expenseCategories;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -25,6 +34,7 @@ export default function AddTransaction() {
     setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
+      ...(name === "type" && { category: "" }),
     }));
   };
 
@@ -34,7 +44,7 @@ export default function AddTransaction() {
     try {
       const payload = {
         amount: Number(form.amount),
-        type: form.type.toLowerCase(),
+        type: form.type,
         category: form.category,
         description: form.description,
         date: form.date,
@@ -43,152 +53,182 @@ export default function AddTransaction() {
       const { data } = await api.post("/transactions", payload);
 
       if (form.saveAsFavorite) {
-        await api.post("/favorites", {
-          amount: Number(form.amount),
-          type: form.type.toLowerCase(),
-          category: form.category,
-          description: form.description,
-        });
+        await api.post("/favorites", payload);
       }
 
       if (data.success) {
-        toast.success("Transaction added successfully 🚀");
+        toast.success("Transaction added successfully");
 
-        setForm(initialState);
-
-        setTimeout(() => {
-          navigate("/");
-        }, 500);
+        navigate("/transactions");
       }
     } catch (error) {
       toast.error(
-        error?.response?.data?.message || "Failed to save transaction.",
+        error.response?.data?.message ||
+          "Failed to save transaction"
       );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black px-4 py-10">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold">Add Transaction</h1>
+    <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
+      <div>
+        <h1 className="text-3xl font-semibold">
+          Add Transaction
+        </h1>
 
-        <p className="text-gray-400 mt-2 mb-8">
-          Choose a saved template or create a new transaction.
+        <p className="mt-2 text-gray-400">
+          Record a new income or expense.
         </p>
-
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Favorite Templates */}
-          <div className="lg:col-span-1">
-            <FavoriteQuickAdd
-              onSelect={(favorite) => {
-                setForm((prev) => ({
-                  ...prev,
-                  amount: favorite.amount,
-                  type: favorite.type,
-                  category: favorite.category,
-                  description: favorite.description,
-                  date: new Date().toISOString().split("T")[0],
-                  saveAsFavorite: false,
-                }));
-
-                setHighlight(true);
-
-                setTimeout(() => {
-                  setHighlight(false);
-                }, 800);
-              }}
-            />
-          </div>
-
-          {/* Transaction Form */}
-          <div className="lg:col-span-2">
-            <form
-              onSubmit={handleSubmit}
-              className={`space-y-5 p-6 rounded-2xl backdrop-blur-xl transition-all duration-300 ${
-                highlight
-                  ? "border-2 border-green-500 bg-green-500/10"
-                  : "border border-white/10 bg-white/5"
-              }`}
-            >
-              <input
-                type="number"
-                min="1"
-                step="0.01"
-                name="amount"
-                value={form.amount}
-                onChange={handleChange}
-                placeholder="Amount"
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-blue-500"
-                required
-              />
-
-              <select
-                name="type"
-                value={form.type}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-blue-500"
-                required
-              >
-                <option value="">Select Type</option>
-                <option value="income">Income</option>
-                <option value="expense">Expense</option>
-              </select>
-
-              <select
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-blue-500"
-                required
-              >
-                <option value="">Select Category</option>
-                <option value="salary">Salary</option>
-                <option value="food">Food</option>
-                <option value="bills">Bills</option>
-                <option value="travel">Travel</option>
-                <option value="other">Other</option>
-              </select>
-
-              <input
-                type="date"
-                name="date"
-                value={form.date}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-blue-500"
-                required
-              />
-
-              <input
-                type="text"
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                placeholder="Description"
-                className="w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-blue-500"
-              />
-
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="saveAsFavorite"
-                  checked={form.saveAsFavorite}
-                  onChange={handleChange}
-                  className="h-4 w-4"
-                />
-
-                <span className="text-sm">Save as Favorite Template</span>
-              </label>
-
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-blue-600 py-3 font-semibold transition hover:bg-blue-700"
-              >
-                Save Transaction
-              </button>
-            </form>
-          </div>
-        </div>
       </div>
+
+      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+        <h2 className="text-lg font-semibold mb-4">
+          Quick Templates
+        </h2>
+
+        <FavoriteQuickAdd
+          onSelect={(favorite) => {
+            setForm({
+              ...favorite,
+              date: new Date().toISOString().split("T")[0],
+              saveAsFavorite: false,
+            });
+
+            setHighlight(true);
+
+            setTimeout(() => setHighlight(false), 600);
+          }}
+        />
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className={`rounded-xl border p-6 space-y-5 transition ${
+          highlight
+            ? "border-green-500 bg-green-500/5"
+            : "border-zinc-800 bg-zinc-900"
+        }`}
+      >
+        <h2 className="text-lg font-semibold">
+          Transaction Details
+        </h2>
+
+        <div>
+          <label className="block mb-2 text-sm text-gray-400">
+            Amount
+          </label>
+
+          <input
+            type="number"
+            name="amount"
+            min="1"
+            step="0.01"
+            placeholder="Enter amount (e.g. 1500)"
+            value={form.amount}
+            onChange={handleChange}
+            required
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-2 text-sm text-gray-400">
+            Transaction Type
+          </label>
+
+          <select
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            required
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none"
+          >
+            <option value="">Choose transaction type</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block mb-2 text-sm text-gray-400">
+            Category
+          </label>
+
+          <select
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+            required
+            disabled={!form.type}
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none disabled:opacity-50"
+          >
+            <option value="">
+              {form.type
+                ? "Choose a category"
+                : "Select transaction type first"}
+            </option>
+
+            {categories.map((category) => (
+              <option
+                key={category}
+                value={category}
+              >
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block mb-2 text-sm text-gray-400">
+            Transaction Date
+          </label>
+
+          <input
+            type="date"
+            name="date"
+            value={form.date}
+            onChange={handleChange}
+            required
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-2 text-sm text-gray-400">
+            Description
+          </label>
+
+          <input
+            type="text"
+            name="description"
+            placeholder="What was this transaction for? (Optional)"
+            value={form.description}
+            onChange={handleChange}
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none"
+          />
+        </div>
+
+        <label className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            name="saveAsFavorite"
+            checked={form.saveAsFavorite}
+            onChange={handleChange}
+          />
+
+          <span className="text-sm text-gray-300">
+            Save this as a reusable template
+          </span>
+        </label>
+
+        <button
+          type="submit"
+          className="w-full rounded-lg bg-blue-600 py-3 font-medium hover:bg-blue-500 transition-colors"
+        >
+          Add Transaction
+        </button>
+      </form>
     </div>
   );
 }
