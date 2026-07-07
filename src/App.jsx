@@ -10,6 +10,7 @@ import EditTransaction from "./components/transactions/EditTransaction";
 import NotFoundPage from "./pages/auth/NotFoundPage";
 import AuthLayout from "./components/layout/AuthLayout";
 import HomeLayout from "./components/layout/HomeLayout";
+import VerifyEmail from "./pages/auth/VerifyEmail";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verify-email/:token" element={<VerifyEmail />} />
         </Route>
 
         {/* Protected Pages */}

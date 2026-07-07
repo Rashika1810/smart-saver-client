@@ -40,12 +40,9 @@ const Register = () => {
     try {
       const { data } = await api.post("/auth/register", input);
 
-      if (data?.success) {
-        localStorage.setItem("token", data.data.token);
-        localStorage.setItem("user", JSON.stringify(data.data.user));
-
-        toast.success("Account created 🎉");
-        navigate("/");
+      if (data.success) {
+        toast.success(data.message);
+        navigate("/login");
       } else {
         toast.error(data?.message || "Registration failed");
       }
@@ -119,7 +116,6 @@ const Register = () => {
                 className="w-full mt-1 px-4 py-3 rounded-xl bg-black/40 text-white border border-white/10 focus:border-emerald-500 outline-none transition"
               />
             </div>
-
             <div>
               <label className="text-sm text-gray-400">Password</label>
               <input

@@ -5,7 +5,8 @@ import api from "../../api/axios";
 
 const Login = () => {
   const navigate = useNavigate();
-
+  const [showResend, setShowResend] = useState(false);
+  const [emailToVerify, setEmailToVerify] = useState("");
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -34,10 +35,27 @@ const Login = () => {
         toast.error(data?.message || "Login failed");
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Server error");
+      const message = err?.response?.data?.message || "Server error";
+
+      toast.error(message);
+
+      if (err.response?.data?.code === "EMAIL_NOT_VERIFIED") {
+        setShowResend(true);
+        setEmailToVerify(input.email);
+      }
     }
   };
+  const resendVerification = async () => {
+    try {
+      const { data } = await api.post("/auth/resend-verification", {
+        email: emailToVerify,
+      });
 
+      toast.success(data.message);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Couldn't resend email.");
+    }
+  };
   useEffect(() => {
     if (localStorage.getItem("token")) navigate("/");
   }, []);
@@ -116,6 +134,15 @@ const Login = () => {
               Login
             </button>
           </form>
+          {showResend && (
+            <button
+              type="button"
+              onClick={resendVerification}
+              className="w-full mt-3 text-green-400 hover:underline"
+            >
+              Resend verification email
+            </button>
+          )}
 
           {/* FOOTER */}
           <p className="text-center text-gray-400 mt-5 text-sm">
