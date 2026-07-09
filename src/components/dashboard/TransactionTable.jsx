@@ -37,7 +37,7 @@ export default function TransactionTable({
 
   return (
     <>
-      <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900">
+     <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-lg">
         {/* Loading Overlay */}
 
         {/* Only table scrolls */}

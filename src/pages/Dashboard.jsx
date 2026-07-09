@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
   const [summary, setSummary] = useState({
     income: 0,
@@ -51,13 +52,23 @@ export default function Dashboard() {
     fetchSummary();
     fetchRecentTransactions();
   }, [fetchSummary, fetchRecentTransactions]);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
       {/* Header */}
 
       <div>
-        <h1 className="text-3xl font-semibold">Welcome back 👋</h1>
+        <h1 className="text-3xl font-semibold">
+          Welcome {user?.name ? user.name.split(" ")[0] : "User"}
+        </h1>
 
         <p className="mt-2 text-gray-400">Here's your financial overview.</p>
       </div>

@@ -79,12 +79,6 @@ export default function Navbar() {
             Add Transaction
           </button>
 
-          {user && (
-            <div className="rounded-lg border border-zinc-800 px-3 py-2 text-sm text-gray-300">
-              {user.name}
-            </div>
-          )}
-
           <button
             onClick={logout}
             className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-gray-300 transition hover:bg-zinc-800 hover:text-white"

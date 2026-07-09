@@ -11,9 +11,7 @@ import {
 
 const BAR_COLOR = "#3B82F6";
 
-
-const formatCurrency = (value) =>
-  `₹${Number(value).toLocaleString("en-IN")}`;
+const formatCurrency = (value) => `₹${Number(value).toLocaleString("en-IN")}`;
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -65,27 +63,17 @@ export default function WeekdaySpendingChart({ data = [] }) {
         />
 
         <YAxis
+          tickFormatter={(value) => `₹${value.toLocaleString("en-IN")}`}
           tick={{ fill: "#a1a1aa", fontSize: 12 }}
-          tickFormatter={(value) =>
-            `₹${Number(value / 1000).toFixed(0)}k`
-          }
           tickLine={false}
           axisLine={false}
         />
 
         <Tooltip content={<CustomTooltip />} />
 
-        <Bar
-          dataKey="amount"
-          radius={[6, 6, 0, 0]}
-          maxBarSize={36}
-        >
+        <Bar dataKey="amount" radius={[6, 6, 0, 0]} maxBarSize={36}>
           {data.map((entry, index) => (
-            <Cell
-              key={index}
-              fill={BAR_COLOR}
-              cursor="pointer"
-            />
+            <Cell key={index} fill={BAR_COLOR} cursor="pointer" />
           ))}
         </Bar>
       </BarChart>

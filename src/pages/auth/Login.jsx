@@ -28,14 +28,13 @@ const Login = () => {
         localStorage.setItem("token", data.data.token);
         localStorage.setItem("user", JSON.stringify(data.data.user));
 
-        toast.success("Welcome back 🚀");
+        toast.success("Welcome back!");
         navigate("/", { replace: true });
       } else {
         toast.error(data?.message || "Login failed");
       }
     } catch (err) {
-      const message = err?.response?.data?.message || "Server error";
-      toast.error(message);
+      toast.error(err?.response?.data?.message || "Server error");
     }
   };
 
@@ -44,84 +43,101 @@ const Login = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex">
-      {/* LEFT BRAND PANEL */}
-      <div className="hidden md:flex w-1/2 flex-col justify-center px-16 text-white">
-        <h1 className="text-5xl font-bold leading-tight">
-          Track your <span className="text-green-400">Money</span> smarter 💰
-        </h1>
+    <div className="min-h-screen bg-[#0f172a] flex">
+      {/* Left Side */}
+      <div className="hidden md:flex w-1/2 border-r border-slate-800">
+        <div className="flex flex-col justify-center px-16 max-w-lg">
+          <h1 className="text-5xl font-bold text-white leading-tight">
+            Expense <span className="text-green-500">Tracker</span>
+          </h1>
 
-        <p className="text-gray-400 mt-4 text-lg">
-          Manage expenses, monitor income, and take control of your financial
-          life with ease.
-        </p>
+          <p className="mt-5 text-slate-400 text-lg leading-8">
+            Stay on top of your finances with a simple dashboard to manage your
+            income and expenses.
+          </p>
 
-        <div className="mt-8 space-y-3 text-gray-300">
-          <p>✔ Real-time expense tracking</p>
-          <p>✔ Smart analytics dashboard</p>
-          <p>✔ Income vs expense insights</p>
-        </div>
+          <div className="mt-10 space-y-4 text-slate-300">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-green-500"></div>
+              <span>Track daily expenses</span>
+            </div>
 
-        <div className="mt-10 text-green-400 font-semibold">
-          💡 Built for better financial decisions
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-green-500"></div>
+              <span>Manage income records</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-green-500"></div>
+              <span>View spending reports</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* RIGHT LOGIN PANEL */}
-      <div className="w-full md:w-1/2 flex items-center justify-center px-6">
-        <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-white">Welcome Back</h2>
-            <p className="text-gray-400 text-sm mt-1">
-              Login to your expense dashboard
+      {/* Right Side */}
+      <div className="flex-1 flex items-center justify-center px-6">
+        <div className="w-full max-w-md bg-[#1e293b] border border-slate-700 rounded-lg p-8">
+          <div className="mb-8">
+            <h2 className="text-3xl font-semibold text-white">
+              Sign in
+            </h2>
+
+            <p className="text-slate-400 mt-2">
+              Enter your credentials to continue.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="text-sm text-gray-400">Email</label>
+              <label className="block text-sm text-slate-300 mb-2">
+                Email
+              </label>
+
               <input
                 type="email"
                 name="email"
-                placeholder="you@example.com"
                 value={input.email}
                 onChange={handleChange}
-                className="w-full mt-1 px-4 py-3 rounded-xl bg-black/40 text-white border border-white/10 focus:border-green-500 outline-none transition"
+                placeholder="you@example.com"
+                className="w-full bg-[#0f172a] border border-slate-600 rounded-md px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-green-500 transition-colors"
               />
             </div>
 
             <div>
-              <label className="text-sm text-gray-400">Password</label>
+              <label className="block text-sm text-slate-300 mb-2">
+                Password
+              </label>
+
               <input
                 type="password"
                 name="password"
-                placeholder="••••••••"
                 value={input.password}
                 onChange={handleChange}
-                className="w-full mt-1 px-4 py-3 rounded-xl bg-black/40 text-white border border-white/10 focus:border-green-500 outline-none transition"
+                placeholder="Enter your password"
+                className="w-full bg-[#0f172a] border border-slate-600 rounded-md px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:border-green-500 transition-colors"
               />
             </div>
 
             <button
               type="submit"
-              className="
-                w-full py-3 rounded-xl
-                bg-gradient-to-r from-green-500 to-emerald-600
-                hover:from-green-600 hover:to-emerald-700
-                transition font-semibold text-white
-                shadow-lg shadow-green-500/20
-              "
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-md transition-colors"
             >
-              Login
+              Sign In
             </button>
           </form>
 
-          <p className="text-center text-gray-400 mt-5 text-sm">
-            New here?{" "}
-            <Link to="/register" className="text-green-400 hover:underline">
-              Create account
-            </Link>
-          </p>
+          <div className="mt-6 border-t border-slate-700 pt-5">
+            <p className="text-center text-slate-400 text-sm">
+              Don't have an account?{" "}
+              <Link
+                to="/register"
+                className="text-green-400 hover:text-green-300 font-medium"
+              >
+                Create account
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
