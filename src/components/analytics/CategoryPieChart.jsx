@@ -11,70 +11,83 @@ const COLORS = [
   "#3B82F6",
   "#22C55E",
   "#F59E0B",
-  "#EF4444",
   "#8B5CF6",
   "#06B6D4",
-  "#EC4899",
+  "#EF4444",
+  "#14B8A6",
   "#84CC16",
 ];
 
-export default function CategoryPieChart({ data }) {
-  if (!data || data.length === 0) {
-    return (
-      <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-        <h2 className="text-xl font-semibold mb-6">Expense by Category</h2>
+const formatCurrency = (value) =>
+  `₹${Number(value).toLocaleString("en-IN")}`;
 
-        <div className="h-72 flex items-center justify-center text-gray-400">
-          No expense data available
-        </div>
+const CustomTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+
+  const item = payload[0].payload;
+
+  return (
+    <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-3 shadow-lg">
+      <p className="mb-1 font-medium text-white capitalize">
+        {item.category}
+      </p>
+
+      <p className="text-sm text-zinc-300">
+        Amount
+      </p>
+
+      <p className="text-base font-semibold text-white">
+        {formatCurrency(item.amount)}
+      </p>
+    </div>
+  );
+};
+
+export default function CategoryPieChart({ data = [] }) {
+  if (!data.length) {
+    return (
+      <div className="flex h-80 items-center justify-center text-sm text-zinc-400">
+        No category data available.
       </div>
     );
   }
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-      <h2 className="text-xl font-semibold mb-6">Expense by Category</h2>
+    <ResponsiveContainer width="100%" height={320}>
+      <PieChart>
+        <Pie
+          data={data}
+          dataKey="amount"
+          nameKey="category"
+          innerRadius={65}
+          outerRadius={90}
+          paddingAngle={2}
+          stroke="none"
+          label={false}
+        >
+          {data.map((entry, index) => (
+            <Cell
+              key={entry.category}
+              fill={COLORS[index % COLORS.length]}
+            />
+          ))}
+        </Pie>
 
-      <ResponsiveContainer width="100%" height={320}>
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="amount"
-            nameKey="category"
-            outerRadius={110}
-            innerRadius={60}
-            paddingAngle={3}
-            label={({ category, percent }) =>
-              `${category} ${(percent * 100).toFixed(0)}%`
-            }
-          >
-            {data.map((entry, index) => (
-              <Cell key={entry.category} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
+        <Tooltip content={<CustomTooltip />} />
 
-          <Tooltip content={<CustomTooltip />} />
-
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+        <Legend
+          layout="vertical"
+          verticalAlign="middle"
+          align="right"
+          iconType="circle"
+          iconSize={10}
+          wrapperStyle={{
+            fontSize: "13px",
+            color: "#d4d4d8",
+            paddingLeft: "20px",
+          }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
   );
 }
-const CustomTooltip = ({ active, payload }) => {
-  if (!active || !payload || payload.length === 0) return null;
-
-  console.log(payload);
-
-  const item = payload[0].payload;
-
-  return (
-    <div className="rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 shadow-xl">
-      <p className="font-semibold capitalize">{item.category}</p>
-
-      <p className="text-blue-400">
-        ₹{Number(item.amount).toLocaleString("en-IN")}
-      </p>
-    </div>
-  );
-};

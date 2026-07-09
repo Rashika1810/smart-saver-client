@@ -1,4 +1,7 @@
+import { expenseCategories, incomeCategories } from "../../utils/categories";
+
 export default function Filters({ filters, setFilters }) {
+   const categories = [...expenseCategories, ...incomeCategories];
   return (
     <div className="space-y-4">
       {/* Search */}
@@ -59,16 +62,20 @@ export default function Filters({ filters, setFilters }) {
         </select>
 
         <select
-          className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-3"
-          value={filters.category}
-          onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-        >
-          <option value="all">All Categories</option>
-          <option value="food">Food</option>
-          <option value="salary">Salary</option>
-          <option value="bills">Bills</option>
-          <option value="travel">Travel</option>
-        </select>
+        className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-3"
+        value={filters.category}
+        onChange={(e) =>
+          setFilters({ ...filters, category: e.target.value })
+        }
+      >
+        <option value="all">All Categories</option>
+
+        {categories.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
       </div>
     </div>
   );

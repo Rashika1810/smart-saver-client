@@ -4,6 +4,7 @@ import api from "../api/axios";
 import SummaryCards from "../components/common/SummaryCards";
 import MonthlyTrendChart from "../components/analytics/MonthlyTrendChart";
 import CategoryPieChart from "../components/analytics/CategoryPieChart";
+import WeekdaySpendingChart from "../components/analytics/WeekdaySpendingChart";
 
 export default function Analytics() {
   const [analytics, setAnalytics] = useState(null);
@@ -13,6 +14,9 @@ export default function Analytics() {
     month: "all",
     year: new Date().getFullYear().toString(),
   });
+
+  // Default chart
+  const [selectedChart, setSelectedChart] = useState("monthly");
 
   const fetchAnalytics = useCallback(async () => {
     try {
@@ -45,7 +49,7 @@ export default function Analytics() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-6 py-8">
         <p className="text-gray-400">Loading analytics...</p>
       </div>
     );
@@ -53,29 +57,27 @@ export default function Analytics() {
 
   if (!analytics) {
     return (
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-6 py-8">
         <p className="text-gray-400">No analytics available.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-semibold">Analytics</h1>
+    <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      {/* Header + Filters */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-3xl font-semibold text-white">Analytics</h1>
+          <p className="mt-1 text-sm text-gray-400">
+            Track your spending and income trends.
+          </p>
+        </div>
 
-        <p className="mt-2 text-gray-400">
-          Understand your spending and income trends.
-        </p>
-      </div>
-
-      {/* Filters */}
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-        <div className="grid grid-cols-2 gap-4 max-w-md">
+        <div className="flex gap-3">
           {/* Month */}
           <select
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+            className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white outline-none"
             value={filters.month}
             onChange={(e) =>
               setFilters({
@@ -101,7 +103,7 @@ export default function Analytics() {
 
           {/* Year */}
           <select
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+            className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white outline-none"
             value={filters.year}
             onChange={(e) =>
               setFilters({
@@ -118,21 +120,53 @@ export default function Analytics() {
         </div>
       </div>
 
-      {/* Summary */}
+      {/* Summary Cards */}
       <SummaryCards summary={analytics.summary} showTransactionCount />
 
-      {/* Monthly Trend */}
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
-        <h2 className="mb-5 text-xl font-semibold">Monthly Trend</h2>
+      {/* Charts */}
+      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-white">
+              {selectedChart === "monthly" && "Monthly Trend"}
+              {selectedChart === "category" && "Category Breakdown"}
+              {selectedChart === "weekday" && "Weekday Spending"}
+            </h2>
 
-        <MonthlyTrendChart data={analytics.monthlyTrend} />
-      </div>
+            <p className="mt-1 text-sm text-gray-400">
+              {selectedChart === "monthly" &&
+                "View your income and expenses over time."}
 
-      {/* Category Breakdown */}
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
-        <h2 className="mb-5 text-xl font-semibold">Category Breakdown</h2>
+              {selectedChart === "category" &&
+                "See which categories contribute the most to your spending."}
 
-        <CategoryPieChart data={analytics.categoryBreakdown} />
+              {selectedChart === "weekday" &&
+                "Analyze your spending pattern across the week."}
+            </p>
+          </div>
+
+          <select
+            value={selectedChart}
+            onChange={(e) => setSelectedChart(e.target.value)}
+            className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white outline-none"
+          >
+            <option value="monthly">Monthly Trend</option>
+            <option value="category">Category Breakdown</option>
+            <option value="weekday">Weekday Spending</option>
+          </select>
+        </div>
+
+        {selectedChart === "monthly" && (
+          <MonthlyTrendChart data={analytics.monthlyTrend} />
+        )}
+
+        {selectedChart === "category" && (
+          <CategoryPieChart data={analytics.categoryBreakdown} />
+        )}
+
+        {selectedChart === "weekday" && (
+          <WeekdaySpendingChart data={analytics.weekdaySpending} />
+        )}
       </div>
     </div>
   );
