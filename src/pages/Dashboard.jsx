@@ -3,6 +3,7 @@ import api from "../api/axios";
 import SummaryCards from "../components/common/SummaryCards";
 import RecentTransactions from "../components/dashboard/RecentTransactions";
 import { useNavigate } from "react-router-dom";
+import AIInsightPopup from "../components/dashboard/AIInsightPopup";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -65,14 +66,17 @@ export default function Dashboard() {
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
       {/* Header */}
 
-      <div>
-        <h1 className="text-3xl font-semibold">
-          Welcome {user?.name ? user.name.split(" ")[0] : "User"}
-        </h1>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-semibold">
+            Welcome {user?.name ? user.name.split(" ")[0] : "User"}
+          </h1>
 
-        <p className="mt-2 text-gray-400">Here's your financial overview.</p>
+          <p className="mt-2 text-gray-400">Here's your financial overview.</p>
+        </div>
+
+        <AIInsightPopup />
       </div>
-
       {/* Summary */}
 
       <SummaryCards summary={summary} />
