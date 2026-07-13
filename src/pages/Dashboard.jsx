@@ -1,15 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import api from "../api/axios";
+import { getProfile, updateOpeningBalance } from "../api/authApi";
 import SummaryCards from "../components/common/SummaryCards";
 import RecentTransactions from "../components/dashboard/RecentTransactions";
 import { useNavigate } from "react-router-dom";
 import AIInsightPopup from "../components/dashboard/AIInsightPopup";
+import OpeningBalanceModal from "../components/common/OpeningBalanceModal";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
   const [summary, setSummary] = useState({
+    openingBalance: 0,
     income: 0,
     expense: 0,
     balance: 0,
@@ -18,6 +21,10 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
 
   const [loading, setLoading] = useState(true);
+
+  const [showOpeningBalanceModal, setShowOpeningBalanceModal] = useState(false);
+
+  const [openingBalance, setOpeningBalance] = useState(0);
 
   const fetchSummary = useCallback(async () => {
     try {
@@ -47,74 +54,142 @@ export default function Dashboard() {
       setLoading(false);
     }
   }, []);
+  const handleOpeningBalance = async (value) => {
+    try {
+      const response = await updateOpeningBalance(value);
+
+      const updatedUser = {
+        ...user,
+        openingBalance: response.data.openingBalance,
+        openingBalanceSet: response.data.openingBalanceSet,
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      setUser(updatedUser);
+
+      fetchSummary();
+
+      setShowOpeningBalanceModal(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchSummary();
     fetchRecentTransactions();
   }, [fetchSummary, fetchRecentTransactions]);
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
 
-    if (storedUser) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setUser(JSON.parse(storedUser));
-    }
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { data } = await getProfile();
+
+        setUser(data);
+        if (!data.openingBalanceSet) {
+          setTimeout(() => {
+            setShowOpeningBalanceModal(true);
+          }, 500);
+        }
+      } catch (error) {
+        console.error(error);
+
+        const storedUser = localStorage.getItem("user");
+
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      }
+    };
+
+    loadProfile();
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-      {/* Header */}
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-7xl mx-auto px-8 py-10">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Welcome, {user?.name ? user.name.split(" ")[0] : "User"} 👋
+            </h1>
 
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold">
-            Welcome {user?.name ? user.name.split(" ")[0] : "User"}
-          </h1>
-
-          <p className="mt-2 text-gray-400">Here's your financial overview.</p>
-        </div>
-
-        <AIInsightPopup />
-      </div>
-      {/* Summary */}
-
-      <SummaryCards summary={summary} />
-
-      {/* Recent Transactions */}
-
-      <section className=" rounded-xl border border-zinc-800 bg-zinc-900 p-6 ">
-        <div
-          className="
-          flex
-          justify-between
-          items-center
-          mb-5
-          "
-        >
-          <h2 className="text-xl font-semibold">Recent Transactions</h2>
-
-          <button
-            onClick={() => navigate("/transactions")}
-            className="
-            text-blue-400
-            hover:text-blue-300
-            "
-          >
-            View all
-          </button>
-        </div>
-
-        {loading ? (
-          <p className="text-gray-400">Loading transactions...</p>
-        ) : transactions.length === 0 ? (
-          <div className="py-8 text-center text-gray-400">
-            No transactions yet.
+            <p className="mt-2 text-gray-500 text-base">
+              Here's a quick overview of your finances.
+            </p>
           </div>
-        ) : (
-          <RecentTransactions data={transactions} />
-        )}
-      </section>
+
+          <AIInsightPopup />
+        </div>
+
+        {/* Summary Cards */}
+
+        <div className="mb-10">
+          <SummaryCards summary={summary} />
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={() => {
+                setOpeningBalance(summary.openingBalance || 0);
+                setShowOpeningBalanceModal(true);
+              }}
+              className="rounded-lg border border-blue-600 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
+            >
+              {user?.openingBalanceSet
+                ? "Edit Opening Balance"
+                : "Set Opening Balance"}
+            </button>
+          </div>
+        </div>
+
+        {/* Recent Transactions */}
+
+        <section className="bg-white border border-gray-200 rounded-2xl shadow-sm">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">
+                Recent Transactions
+              </h2>
+
+              <p className="text-sm text-gray-500 mt-1">
+                Your latest income and expenses.
+              </p>
+            </div>
+
+            <button
+              onClick={() => navigate("/transactions")}
+              className="
+              text-blue-600
+              font-medium
+              hover:text-blue-700
+              transition-colors
+            "
+            >
+              View all →
+            </button>
+          </div>
+
+          <div className="p-6">
+            {loading ? (
+              <p className="text-gray-500">Loading transactions...</p>
+            ) : transactions.length === 0 ? (
+              <div className="py-12 text-center text-gray-500">
+                No transactions yet.
+              </div>
+            ) : (
+              <RecentTransactions data={transactions} />
+            )}
+          </div>
+        </section>
+      </div>
+      <OpeningBalanceModal
+        isOpen={showOpeningBalanceModal}
+        currentBalance={openingBalance}
+        onCancel={() => setShowOpeningBalanceModal(false)}
+        onSave={handleOpeningBalance}
+      />
     </div>
   );
 }

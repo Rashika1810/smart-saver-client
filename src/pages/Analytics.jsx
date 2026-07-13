@@ -5,19 +5,43 @@ import SummaryCards from "../components/common/SummaryCards";
 import MonthlyTrendChart from "../components/analytics/MonthlyTrendChart";
 import CategoryPieChart from "../components/analytics/CategoryPieChart";
 import WeekdaySpendingChart from "../components/analytics/WeekdaySpendingChart";
+import TransactionTableSkeleton from "../components/dashboard/TransactionTableSkeleton";
+
+const months = [
+  { value: "all", label: "All Months" },
+  { value: "1", label: "January" },
+  { value: "2", label: "February" },
+  { value: "3", label: "March" },
+  { value: "4", label: "April" },
+  { value: "5", label: "May" },
+  { value: "6", label: "June" },
+  { value: "7", label: "July" },
+  { value: "8", label: "August" },
+  { value: "9", label: "September" },
+  { value: "10", label: "October" },
+  { value: "11", label: "November" },
+  { value: "12", label: "December" },
+];
 
 export default function Analytics() {
+  const currentYear = new Date().getFullYear();
+
+  const years = Array.from(
+    { length: 5 },
+    (_, i) => (currentYear - i).toString(),
+  );
+
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [filters, setFilters] = useState({
     month: "all",
-    year: new Date().getFullYear().toString(),
+    year: currentYear.toString(),
   });
 
-  // Default chart
   const [selectedChart, setSelectedChart] = useState("monthly");
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
@@ -49,35 +73,48 @@ export default function Analytics() {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <p className="text-gray-400">Loading analytics...</p>
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <TransactionTableSkeleton />
       </div>
     );
   }
 
   if (!analytics) {
     return (
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <p className="text-gray-400">No analytics available.</p>
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="rounded-2xl border border-gray/10 bg-gray/5 backdrop-blur-xl p-16 text-center">
+          <h2 className="text-3xl font-semibold text-gray">
+            No Analytics Available
+          </h2>
+
+          <p className="mt-3 text-gray-400">
+            Add a few transactions to unlock charts and financial insights.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
-      {/* Header + Filters */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="max-w-7xl mx-auto space-y-8 px-6 py-8">
+      {/* Header */}
+
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-3xl font-semibold text-white">Analytics</h1>
-          <p className="mt-1 text-sm text-gray-400">
-            Track your spending and income trends.
+          <h1 className="text-4xl font-bold tracking-tight text-black">
+            Analytics
+          </h1>
+
+          <p className="mt-2 max-w-2xl text-gray-400">
+            Visualize your income, expenses and spending patterns with detailed
+            financial analytics.
           </p>
         </div>
 
+        {/* Filters */}
+
         <div className="flex gap-3">
-          {/* Month */}
           <select
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white outline-none"
             value={filters.month}
             onChange={(e) =>
               setFilters({
@@ -85,25 +122,19 @@ export default function Analytics() {
                 month: e.target.value,
               })
             }
+            className="rounded-xl border border-gray/10 bg-gray/5 px-4 py-3 text-gray backdrop-blur-xl outline-none transition focus:border-blue-500"
           >
-            <option value="all">All Months</option>
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
+            {months.map((month) => (
+              <option
+                key={month.value}
+                value={month.value}
+              >
+                {month.label}
+              </option>
+            ))}
           </select>
 
-          {/* Year */}
           <select
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white outline-none"
             value={filters.year}
             onChange={(e) =>
               setFilters({
@@ -111,23 +142,33 @@ export default function Analytics() {
                 year: e.target.value,
               })
             }
+            className="rounded-xl border border-gray/10 bg-gray/5 px-4 py-3 text-gray backdrop-blur-xl outline-none transition focus:border-blue-500"
           >
-            <option value="2026">2026</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
+            {years.map((year) => (
+              <option
+                key={year}
+                value={year}
+              >
+                {year}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
       {/* Summary Cards */}
-      <SummaryCards summary={analytics.summary} showTransactionCount />
 
-      {/* Charts */}
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <SummaryCards
+        summary={analytics.summary}
+        showTransactionCount
+      />
+
+      {/* Chart Card */}
+
+      <div className="rounded-2xl border border-gray/10 bg-gray/5 p-6 backdrop-blur-xl">
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="text-2xl font-semibold text-gray">
               {selectedChart === "monthly" && "Monthly Trend"}
               {selectedChart === "category" && "Category Breakdown"}
               {selectedChart === "weekday" && "Weekday Spending"}
@@ -135,20 +176,20 @@ export default function Analytics() {
 
             <p className="mt-1 text-sm text-gray-400">
               {selectedChart === "monthly" &&
-                "View your income and expenses over time."}
+                "Compare your income and expenses over time."}
 
               {selectedChart === "category" &&
-                "See which categories contribute the most to your spending."}
+                "Understand where most of your money is spent."}
 
               {selectedChart === "weekday" &&
-                "Analyze your spending pattern across the week."}
+                "Discover which days you spend the most."}
             </p>
           </div>
 
           <select
             value={selectedChart}
             onChange={(e) => setSelectedChart(e.target.value)}
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white outline-none"
+            className="rounded-xl border border-gray/10 bg-gray/5 px-4 py-3 text-gray backdrop-blur-xl outline-none transition focus:border-blue-500"
           >
             <option value="monthly">Monthly Trend</option>
             <option value="category">Category Breakdown</option>

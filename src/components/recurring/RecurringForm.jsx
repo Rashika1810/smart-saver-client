@@ -1,4 +1,17 @@
 import { useState } from "react";
+import {
+  Calendar,
+  DollarSign,
+  FileText,
+  Layers,
+  Repeat,
+  Tag,
+} from "lucide-react";
+
+import {
+  expenseCategories,
+  incomeCategories,
+} from "../../utils/categories";
 
 const initialState = {
   amount: "",
@@ -16,10 +29,18 @@ export default function RecurringForm({
 }) {
   const [form, setForm] = useState(initialData || initialState);
 
+  const categories =
+    form.type === "income"
+      ? incomeCategories
+      : expenseCategories;
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
+      ...(name === "type" && { category: "" }),
     }));
   };
 
@@ -28,15 +49,21 @@ export default function RecurringForm({
     onSubmit(form);
   };
 
+  const inputClass =
+    "w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
+
   return (
-    <form onSubmit={submit} className="space-y-4">
+    <form
+      onSubmit={submit}
+      className="space-y-6"
+    >
+      {/* Amount & Type */}
 
-      {/* Amount + Type */}
-
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid gap-5 md:grid-cols-2">
 
         <div>
-          <label className="block mb-2 text-sm text-zinc-400">
+          <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+            <DollarSign size={16} />
             Amount
           </label>
 
@@ -45,16 +72,17 @@ export default function RecurringForm({
             name="amount"
             min="1"
             step="0.01"
-            placeholder="e.g. 999"
+            placeholder="Enter amount"
             value={form.amount}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-2.5 outline-none focus:border-blue-500"
+            className={inputClass}
           />
         </div>
 
         <div>
-          <label className="block mb-2 text-sm text-zinc-400">
+          <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+            <Layers size={16} />
             Transaction Type
           </label>
 
@@ -62,7 +90,7 @@ export default function RecurringForm({
             name="type"
             value={form.type}
             onChange={handleChange}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-2.5"
+            className={inputClass}
           >
             <option value="expense">Expense</option>
             <option value="income">Income</option>
@@ -74,7 +102,9 @@ export default function RecurringForm({
       {/* Category */}
 
       <div>
-        <label className="block mb-2 text-sm text-zinc-400">
+
+        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+          <Tag size={16} />
           Category
         </label>
 
@@ -83,66 +113,53 @@ export default function RecurringForm({
           value={form.category}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-2.5"
+          className={inputClass}
         >
-          <option value="">Choose category</option>
+          <option value="">
+            Choose a category
+          </option>
 
-          <optgroup label="Income">
-            <option value="salary">Salary</option>
-            <option value="freelance">Freelance</option>
-            <option value="business">Business</option>
-            <option value="investment">Investment</option>
-            <option value="bonus">Bonus</option>
-            <option value="gift">Gift</option>
-            <option value="refund">Refund</option>
-            <option value="other-income">Other Income</option>
-          </optgroup>
+          {categories.map((category) => (
+            <option
+              key={category}
+              value={category}
+            >
+              {category}
+            </option>
+          ))}
 
-          <optgroup label="Expense">
-            <option value="food">Food</option>
-            <option value="groceries">Groceries</option>
-            <option value="shopping">Shopping</option>
-            <option value="travel">Travel</option>
-            <option value="transport">Transport</option>
-            <option value="fuel">Fuel</option>
-            <option value="bills">Bills</option>
-            <option value="rent">Rent</option>
-            <option value="utilities">Utilities</option>
-            <option value="health">Healthcare</option>
-            <option value="education">Education</option>
-            <option value="entertainment">Entertainment</option>
-            <option value="insurance">Insurance</option>
-            <option value="subscription">Subscription</option>
-            <option value="tax">Tax</option>
-            <option value="charity">Charity</option>
-            <option value="other-expense">Other Expense</option>
-          </optgroup>
         </select>
+
       </div>
 
       {/* Description */}
 
       <div>
-        <label className="block mb-2 text-sm text-zinc-400">
+
+        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+          <FileText size={16} />
           Description
         </label>
 
         <textarea
-          rows={2}
+          rows={4}
           name="description"
           placeholder="Example: Netflix subscription"
           value={form.description}
           onChange={handleChange}
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-2.5 resize-none"
+          className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition resize-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
         />
+
       </div>
 
-      {/* Frequency + Date */}
+      {/* Frequency & Start Date */}
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid gap-5 md:grid-cols-2">
 
         <div>
-          <label className="block mb-2 text-sm text-zinc-400">
+
+          <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+            <Repeat size={16} />
             Repeat Every
           </label>
 
@@ -150,17 +167,20 @@ export default function RecurringForm({
             name="frequency"
             value={form.frequency}
             onChange={handleChange}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-2.5"
+            className={inputClass}
           >
-            <option value="daily">Day</option>
-            <option value="weekly">Week</option>
-            <option value="monthly">Month</option>
-            <option value="yearly">Year</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
           </select>
+
         </div>
 
         <div>
-          <label className="block mb-2 text-sm text-zinc-400">
+
+          <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+            <Calendar size={16} />
             Start Date
           </label>
 
@@ -169,18 +189,23 @@ export default function RecurringForm({
             name="startDate"
             value={form.startDate?.split("T")[0]}
             onChange={handleChange}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-2.5"
+            className={inputClass}
           />
+
         </div>
 
       </div>
 
+      {/* Submit */}
+
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-blue-600 py-2.5 font-medium hover:bg-blue-700 disabled:opacity-60"
+        className="h-12 w-full rounded-xl bg-blue-600 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {loading ? "Saving..." : "Save Recurring Transaction"}
+        {loading
+          ? "Saving..."
+          : "Save Recurring Transaction"}
       </button>
 
     </form>

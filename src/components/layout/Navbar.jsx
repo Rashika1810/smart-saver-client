@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, Plus } from "lucide-react";
+import { Menu, X, Plus, LogOut, Upload } from "lucide-react";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -18,7 +18,6 @@ export default function Navbar() {
     }
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
@@ -31,125 +30,139 @@ export default function Navbar() {
   };
 
   const navClass = ({ isActive }) =>
-    `transition-colors pb-1 border-b-2 ${
+    `px-4 py-2 rounded-lg text-sm font-medium transition-all ${
       isActive
-        ? "border-blue-500 text-white"
-        : "border-transparent text-gray-400 hover:text-white"
-    }`;
-
-  const mobileNavClass = ({ isActive }) =>
-    `rounded-lg px-3 py-2 transition ${
-      isActive ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-zinc-800"
+        ? "bg-blue-50 text-blue-600"
+        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
     }`;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-900/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        {/* Logo */}
-        <Link to="/" className="text-xl font-semibold tracking-tight">
-          Smart<span className="text-blue-400">Saver</span>
-        </Link>
+    <>
+      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
+          {/* Logo */}
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-8 md:flex">
-          <NavLink to="/" end className={navClass}>
-            Overview
-          </NavLink>
-
-          <NavLink to="/transactions" className={navClass}>
-            Transactions
-          </NavLink>
-
-          <NavLink to="/analytics" className={navClass}>
-            Analytics
-          </NavLink>
-
-          <NavLink to="/recurring" className={navClass}>
-            Recurring
-          </NavLink>
-        </nav>
-
-        {/* Desktop Right */}
-        <div className="hidden items-center gap-3 md:flex">
-          <button
-            onClick={() => navigate("/add-transaction")}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500"
+          <Link
+            to="/"
+            className="text-2xl font-bold tracking-tight text-gray-900"
           >
-            <Plus size={18} />
-            Add Transaction
-          </button>
+            Smart
+            <span className="text-blue-600">Saver</span>
+          </Link>
 
-          <button
-            onClick={logout}
-            className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-gray-300 transition hover:bg-zinc-800 hover:text-white"
-          >
-            Logout
-          </button>
-        </div>
+          {/* Desktop Nav */}
 
-        {/* Mobile Right */}
-        <div className="flex items-center gap-2 md:hidden">
-          <button
-            onClick={() => navigate("/add-transaction")}
-            className="rounded-lg bg-blue-600 p-2 transition hover:bg-blue-500"
-          >
-            <Plus size={18} />
-          </button>
-
-          <button
-            onClick={() => setMobileOpen((prev) => !prev)}
-            className="rounded-lg border border-zinc-700 p-2 transition hover:bg-zinc-800"
-          >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="border-t border-zinc-800 bg-zinc-900 md:hidden">
-          <div className="space-y-2 p-4">
-            <NavLink to="/" end className={mobileNavClass}>
-              Overview
+          <nav className="hidden md:flex items-center gap-2">
+            <NavLink end to="/" className={navClass}>
+              Dashboard
             </NavLink>
 
-            <NavLink to="/transactions" className={mobileNavClass}>
+            <NavLink to="/transactions" className={navClass}>
               Transactions
             </NavLink>
 
-            <NavLink to="/analytics" className={mobileNavClass}>
+            <NavLink to="/analytics" className={navClass}>
               Analytics
             </NavLink>
 
-            <NavLink to="/recurring" className={mobileNavClass}>
+            <NavLink to="/recurring" className={navClass}>
               Recurring
             </NavLink>
+            <NavLink to="/import-statement" className={navClass}>
+              Import Statement
+            </NavLink>
+          </nav>
 
-            <div className="my-3 border-t border-zinc-800" />
+          {/* Right */}
+
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={() => navigate("/add-transaction")}
+              className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 transition"
+            >
+              <Plus size={18} />
+              Add
+            </button>
 
             {user && (
-              <div className="px-3 text-sm text-gray-400">
-                Signed in as
-                <div className="mt-1 font-medium text-white">{user.name}</div>
+              <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-3 py-2">
+                <div className="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center font-semibold text-blue-700">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+
+                <div className="leading-tight">
+                  <p className="text-sm font-medium text-gray-900">
+                    {user.name}
+                  </p>
+
+                  <p className="text-xs text-gray-500">Welcome back</p>
+                </div>
               </div>
             )}
 
             <button
+              onClick={logout}
+              className="rounded-xl p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 transition"
+            >
+              <LogOut size={20} />
+            </button>
+          </div>
+
+          {/* Mobile */}
+
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden rounded-lg p-2 hover:bg-gray-100"
+          >
+            {mobileOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+      </header>
+
+      {mobileOpen && (
+        <div className="md:hidden bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto p-5 space-y-2">
+            <NavLink end to="/" className={navClass}>
+              Dashboard
+            </NavLink>
+
+            <NavLink to="/transactions" className={navClass}>
+              Transactions
+            </NavLink>
+
+            <NavLink to="/analytics" className={navClass}>
+              Analytics
+            </NavLink>
+
+            <NavLink to="/recurring" className={navClass}>
+              Recurring
+            </NavLink>
+            <NavLink to="/import-statement" className={navClass}>
+              Import Statement
+            </NavLink>
+            <button
+              onClick={() => navigate("/import-statement")}
+              className="flex items-center gap-2 rounded-xl border border-blue-600 px-4 py-2 text-blue-600 font-medium hover:bg-blue-50 transition"
+            >
+              <Upload size={18} />
+              Import
+            </button>
+            <button
               onClick={() => navigate("/add-transaction")}
-              className="w-full rounded-lg bg-blue-600 px-4 py-3 text-left font-medium transition hover:bg-blue-500"
+              className="w-full mt-4 rounded-xl bg-blue-600 py-3 text-white font-medium"
             >
               + Add Transaction
             </button>
 
             <button
               onClick={logout}
-              className="w-full rounded-lg border border-zinc-700 px-4 py-3 text-left text-gray-300 transition hover:bg-zinc-800 hover:text-white"
+              className="w-full rounded-xl border border-gray-300 py-3 text-gray-700 hover:bg-gray-100"
             >
               Logout
             </button>
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

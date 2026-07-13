@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import {
+  Calendar,
+  IndianRupee,
+  FileText,
+  Layers,
+  Tag,
+} from "lucide-react";
+
 import api from "../../api/axios";
 import FavoriteQuickAdd from "../favorites/FavoriteQuickAdd";
 import {
@@ -58,7 +66,6 @@ export default function AddTransaction() {
 
       if (data.success) {
         toast.success("Transaction added successfully");
-
         navigate("/transactions");
       }
     } catch (error) {
@@ -69,22 +76,27 @@ export default function AddTransaction() {
     }
   };
 
+  const inputClass =
+    "w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
+
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold">
+    <div className="max-w-3xl mx-auto px-6 py-10">
+
+      {/* Header */}
+
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">
           Add Transaction
         </h1>
 
-        <p className="mt-2 text-gray-400">
-          Record a new income or expense.
+        <p className="mt-2 text-gray-500">
+          Record your income or expenses to keep your finances organized.
         </p>
       </div>
 
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
-        <h2 className="text-lg font-semibold mb-4">
-          Quick Templates
-        </h2>
+      {/* Quick Templates */}
+
+      <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
 
         <FavoriteQuickAdd
           onSelect={(favorite) => {
@@ -99,136 +111,179 @@ export default function AddTransaction() {
             setTimeout(() => setHighlight(false), 600);
           }}
         />
+
       </div>
+
+      {/* Form */}
 
       <form
         onSubmit={handleSubmit}
-        className={`rounded-xl border p-6 space-y-5 transition ${
+        className={`rounded-2xl border bg-white p-8 shadow-sm transition-all duration-300 ${
           highlight
-            ? "border-green-500 bg-green-500/5"
-            : "border-zinc-800 bg-zinc-900"
+            ? "border-green-400 ring-2 ring-green-100"
+            : "border-gray-200"
         }`}
       >
-        <h2 className="text-lg font-semibold">
+
+        <h2 className="mb-8 text-xl font-semibold text-gray-900">
           Transaction Details
         </h2>
 
-        <div>
-          <label className="block mb-2 text-sm text-gray-400">
-            Amount
-          </label>
+        <div className="space-y-6">
 
-          <input
-            type="number"
-            name="amount"
-            min="1"
-            step="0.01"
-            placeholder="Enter amount (e.g. 1500)"
-            value={form.amount}
-            onChange={handleChange}
-            required
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none"
-          />
-        </div>
+          {/* Amount */}
 
-        <div>
-          <label className="block mb-2 text-sm text-gray-400">
-            Transaction Type
-          </label>
+          <div>
 
-          <select
-            name="type"
-            value={form.type}
-            onChange={handleChange}
-            required
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none"
-          >
-            <option value="">Choose transaction type</option>
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
-          </select>
-        </div>
+            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+              <IndianRupee size={16} />
+              Amount
+            </label>
 
-        <div>
-          <label className="block mb-2 text-sm text-gray-400">
-            Category
-          </label>
+            <input
+              type="number"
+              name="amount"
+              min="1"
+              step="0.01"
+              placeholder="Enter amount"
+              value={form.amount}
+              onChange={handleChange}
+              required
+              className={inputClass}
+            />
 
-          <select
-            name="category"
-            value={form.category}
-            onChange={handleChange}
-            required
-            disabled={!form.type}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none disabled:opacity-50"
-          >
-            <option value="">
-              {form.type
-                ? "Choose a category"
-                : "Select transaction type first"}
-            </option>
+          </div>
 
-            {categories.map((category) => (
-              <option
-                key={category}
-                value={category}
-              >
-                {category}
+          {/* Type */}
+
+          <div>
+
+            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+              <Layers size={16} />
+              Transaction Type
+            </label>
+
+            <select
+              name="type"
+              value={form.type}
+              onChange={handleChange}
+              required
+              className={inputClass}
+            >
+              <option value="">Choose transaction type</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+
+          </div>
+
+          {/* Category */}
+
+          <div>
+
+            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+              <Tag size={16} />
+              Category
+            </label>
+
+            <select
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              required
+              disabled={!form.type}
+              className={`${inputClass} disabled:bg-gray-100 disabled:text-gray-400`}
+            >
+              <option value="">
+                {form.type
+                  ? "Choose a category"
+                  : "Select transaction type first"}
               </option>
-            ))}
-          </select>
-        </div>
 
-        <div>
-          <label className="block mb-2 text-sm text-gray-400">
-            Transaction Date
+              {categories.map((category) => (
+                <option
+                  key={category}
+                  value={category}
+                >
+                  {category}
+                </option>
+              ))}
+
+            </select>
+
+          </div>
+
+          {/* Date */}
+
+          <div>
+
+            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+              <Calendar size={16} />
+              Transaction Date
+            </label>
+
+            <input
+              type="date"
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+              required
+              className={inputClass}
+            />
+
+          </div>
+
+          {/* Description */}
+
+          <div>
+
+            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+              <FileText size={16} />
+              Description
+            </label>
+
+            <textarea
+              rows={4}
+              name="description"
+              placeholder="Add a note (optional)"
+              value={form.description}
+              onChange={handleChange}
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 resize-none"
+            />
+
+          </div>
+
+          {/* Save Template */}
+
+          <label className="flex items-center gap-3 rounded-xl bg-gray-50 p-4">
+
+            <input
+              type="checkbox"
+              name="saveAsFavorite"
+              checked={form.saveAsFavorite}
+              onChange={handleChange}
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+
+            <span className="text-sm text-gray-700">
+              Save this transaction as a reusable template
+            </span>
+
           </label>
 
-          <input
-            type="date"
-            name="date"
-            value={form.date}
-            onChange={handleChange}
-            required
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none"
-          />
+          {/* Button */}
+
+          <button
+            type="submit"
+            className="w-full h-12 rounded-xl bg-blue-600 text-white font-semibold transition hover:bg-blue-700"
+          >
+            Add Transaction
+          </button>
+
         </div>
 
-        <div>
-          <label className="block mb-2 text-sm text-gray-400">
-            Description
-          </label>
-
-          <input
-            type="text"
-            name="description"
-            placeholder="What was this transaction for? (Optional)"
-            value={form.description}
-            onChange={handleChange}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 focus:border-blue-500 outline-none"
-          />
-        </div>
-
-        <label className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            name="saveAsFavorite"
-            checked={form.saveAsFavorite}
-            onChange={handleChange}
-          />
-
-          <span className="text-sm text-gray-300">
-            Save this as a reusable template
-          </span>
-        </label>
-
-        <button
-          type="submit"
-          className="w-full rounded-lg bg-blue-600 py-3 font-medium hover:bg-blue-500 transition-colors"
-        >
-          Add Transaction
-        </button>
       </form>
+
     </div>
   );
 }

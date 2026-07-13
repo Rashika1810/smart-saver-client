@@ -1,9 +1,4 @@
-import {
-  Wallet,
-  ArrowDownCircle,
-  ArrowUpCircle,
-  Receipt,
-} from "lucide-react";
+import { Wallet, ArrowDownCircle, ArrowUpCircle, Receipt } from "lucide-react";
 import AnimatedNumber from "../common/AnimatedNumber";
 
 export default function SummaryCards({
@@ -12,21 +7,27 @@ export default function SummaryCards({
 }) {
   const cards = [
     {
+      key: "openingBalance",
+      title: "Opening Balance",
+      color: "text-indigo-600",
+      icon: Wallet,
+    },
+    {
       key: "balance",
-      title: "Balance",
-      color: "text-blue-400",
+      title: "Current Balance",
+      color: "text-blue-600",
       icon: Wallet,
     },
     {
       key: "income",
-      title: "Income",
-      color: "text-green-400",
+      title: "Total Income",
+      color: "text-green-600",
       icon: ArrowDownCircle,
     },
     {
       key: "expense",
-      title: "Expense",
-      color: "text-red-400",
+      title: "Total Expense",
+      color: "text-red-600",
       icon: ArrowUpCircle,
     },
   ];
@@ -35,17 +36,17 @@ export default function SummaryCards({
     cards.push({
       key: "transactionCount",
       title: "Transactions",
-      color: "text-yellow-400",
+      color: "text-amber-600",
       icon: Receipt,
     });
   }
 
   return (
     <div
-      className={`grid gap-6 ${
+      className={`grid gap-4 ${
         showTransactionCount
-          ? "grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
-          : "grid-cols-1 md:grid-cols-3"
+          ? "grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 max-w-6xl"
+          : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl"
       }`}
     >
       {cards.map((card) => {
@@ -54,37 +55,21 @@ export default function SummaryCards({
         return (
           <div
             key={card.key}
-            className="rounded-xl border border-zinc-800 bg-zinc-900 p-6"
+            className="w-full max-w-xs rounded-md border border-gray-200 bg-white p-3 transition-shadow duration-200 hover:shadow-sm"
           >
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm text-gray-400">
-                  {card.title}
-                </p>
+            <div className="flex items-center gap-2">
+              <Icon size={16} className={card.color} />
 
-                <h2
-                  className={`mt-2 text-3xl font-semibold ${card.color}`}
-                >
-                  {card.key === "transactionCount" ? (
-                    <AnimatedNumber
-                      value={summary?.[card.key] ?? 0}
-                    />
-                  ) : (
-                    <AnimatedNumber
-                      value={summary?.[card.key] ?? 0}
-                      prefix="₹"
-                    />
-                  )}
-                </h2>
-              </div>
-
-              <div className="rounded-lg bg-zinc-800 p-2">
-                <Icon
-                  size={22}
-                  className={card.color}
-                />
-              </div>
+              <p className="text-sm font-medium text-gray-500">{card.title}</p>
             </div>
+
+            <h2 className="mt-1 text-xl font-semibold text-gray-900">
+              {card.key === "transactionCount" ? (
+                <AnimatedNumber value={summary?.[card.key] ?? 0} />
+              ) : (
+                <AnimatedNumber value={summary?.[card.key] ?? 0} prefix="₹" />
+              )}
+            </h2>
           </div>
         );
       })}

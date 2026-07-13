@@ -10,16 +10,16 @@ export default function HomeLayout() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-black via-gray-900 to-black text-white">
-      {/* Sticky Navbar */}
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      {/* Navbar */}
       <Navbar />
 
-      {/* Page Content */}
-      <main className="flex-1">
+      {/* Main Content */}
+      <main className="flex-1 py-8">
         <Outlet />
       </main>
 
-      {/* Footer at bottom of content */}
+      {/* Footer */}
       <Footer />
     </div>
   );

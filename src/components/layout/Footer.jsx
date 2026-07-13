@@ -1,18 +1,28 @@
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black/30 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto flex flex-col items-center justify-between gap-4 px-6 py-6 md:flex-row">
-        <p className="text-sm text-gray-400">
-          © {new Date().getFullYear()} Smart Saver. All rights reserved.
+    <footer className="mt-12 border-t border-gray-200 bg-white">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-8 py-6">
+
+        <p className="text-sm text-gray-500">
+          © {new Date().getFullYear()} SmartSaver. All rights reserved.
         </p>
 
-        <div className="flex items-center gap-6 text-sm text-gray-400">
-          <button className="transition hover:text-white">Privacy</button>
+        <div className="flex gap-6 mt-4 md:mt-0">
 
-          <button className="transition hover:text-white">Terms</button>
+          <button className="text-sm text-gray-500 hover:text-blue-600 transition">
+            Privacy
+          </button>
 
-          <button className="transition hover:text-white">Support</button>
+          <button className="text-sm text-gray-500 hover:text-blue-600 transition">
+            Terms
+          </button>
+
+          <button className="text-sm text-gray-500 hover:text-blue-600 transition">
+            Support
+          </button>
+
         </div>
+
       </div>
     </footer>
   );

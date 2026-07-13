@@ -59,7 +59,7 @@ export default function Transactions() {
       setTransactions(data.data || []);
 
       setPagination(data.pagination);
-    // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
     } catch (error) {
       toast.error("Failed to load transactions");
     } finally {
@@ -79,59 +79,46 @@ export default function Transactions() {
   }, [fetchTransactions]);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-      {/* Header */}
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-7xl mx-auto px-8 py-10">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Transactions</h1>
 
-      <div>
-        <h1 className="text-3xl font-semibold">Transactions</h1>
-
-        <p className="mt-2 text-gray-400">
-          Manage all your income and expenses.
-        </p>
-      </div>
-
-      {/* Filters */}
-
-      <div
-        className="
-rounded-xl
-border
-border-zinc-800
-bg-zinc-900
-p-5
-"
-      >
-        <Filters filters={filters} setFilters={setFilters} />
-      </div>
-
-      {/* Table */}
-
-      {loading ? (
-        <TransactionTableSkeleton />
-      ) : transactions.length === 0 ? (
-        <div
-          className="
-rounded-xl
-border
-border-zinc-800
-bg-zinc-900
-p-10
-text-center
-text-gray-400
-"
-        >
-          No transactions found.
+          <p className="mt-2 text-gray-500">
+            View, search, and manage all your income and expenses.
+          </p>
         </div>
-      ) : (
-        <TransactionTable
-          data={transactions}
-          refresh={fetchTransactions}
-          page={page}
-          setPage={setPage}
-          pagination={pagination}
-          pageLoading={pageLoading}
-        />
-      )}
+
+        {/* Filters */}
+        <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <Filters filters={filters} setFilters={setFilters} />
+        </div>
+
+        {/* Transactions */}
+        {loading ? (
+          <TransactionTableSkeleton />
+        ) : transactions.length === 0 ? (
+          <div className="rounded-2xl border border-gray-200 bg-white py-20 text-center shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-800">
+              No transactions found
+            </h3>
+
+            <p className="mt-2 text-gray-500">
+              Try changing your filters or add a new transaction.
+            </p>
+          </div>
+        ) : (
+          <TransactionTable
+            data={transactions}
+            refresh={fetchTransactions}
+            page={page}
+            setPage={setPage}
+            pagination={pagination}
+            pageLoading={pageLoading}
+          />
+        )}
+      </div>
     </div>
   );
 }

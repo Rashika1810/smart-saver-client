@@ -9,22 +9,37 @@ import {
   Cell,
 } from "recharts";
 
-const BAR_COLOR = "#3B82F6";
+const COLORS = [
+  "#3B82F6",
+  "#2563EB",
+  "#1D4ED8",
+  "#0EA5E9",
+  "#06B6D4",
+  "#3B82F6",
+  "#2563EB",
+];
 
-const formatCurrency = (value) => `₹${Number(value).toLocaleString("en-IN")}`;
+const formatCurrency = (value) =>
+  `₹${Number(value).toLocaleString("en-IN")}`;
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-3 shadow-lg">
-      <p className="mb-1 font-medium text-white">{label}</p>
-
-      <p className="text-sm text-zinc-300">Total Spending</p>
-
-      <p className="text-base font-semibold text-white">
-        {formatCurrency(payload[0].value)}
+    <div className="min-w-[190px] rounded-2xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl p-4 shadow-2xl">
+      <p className="mb-3 font-semibold text-white">
+        {label}
       </p>
+
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-zinc-400">
+          Total Spending
+        </span>
+
+        <span className="font-semibold text-white">
+          {formatCurrency(payload[0].value)}
+        </span>
+      </div>
     </div>
   );
 };
@@ -32,51 +47,85 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function WeekdaySpendingChart({ data = [] }) {
   if (!data.length) {
     return (
-      <div className="flex h-80 items-center justify-center text-sm text-zinc-400">
-        No weekday spending available.
+      <div className="flex h-[430px] flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl">
+        <div className="mb-4 text-6xl">📅</div>
+
+        <h3 className="text-2xl font-semibold">
+          No Weekday Data
+        </h3>
+
+        <p className="mt-3 max-w-sm text-center text-zinc-400">
+          Add more expense transactions to discover your
+          weekday spending habits.
+        </p>
       </div>
     );
   }
 
   return (
-    <ResponsiveContainer width="100%" height={320}>
-      <BarChart
-        data={data}
-        margin={{
-          top: 10,
-          right: 20,
-          left: 0,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid
-          vertical={false}
-          stroke="#27272a"
-          strokeDasharray="3 3"
-        />
+    <div className="h-[430px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          margin={{
+            top: 20,
+            right: 20,
+            left: 10,
+            bottom: 10,
+          }}
+        >
+          <CartesianGrid
+            stroke="#27272a"
+            strokeDasharray="3 3"
+            vertical={false}
+          />
 
-        <XAxis
-          dataKey="day"
-          tick={{ fill: "#a1a1aa", fontSize: 12 }}
-          tickLine={false}
-          axisLine={false}
-        />
+          <XAxis
+            dataKey="day"
+            tick={{
+              fill: "#9ca3af",
+              fontSize: 12,
+            }}
+            tickMargin={10}
+            tickLine={false}
+            axisLine={false}
+          />
 
-        <YAxis
-          tickFormatter={(value) => `₹${value.toLocaleString("en-IN")}`}
-          tick={{ fill: "#a1a1aa", fontSize: 12 }}
-          tickLine={false}
-          axisLine={false}
-        />
+          <YAxis
+            tick={{
+              fill: "#9ca3af",
+              fontSize: 12,
+            }}
+            tickFormatter={(value) =>
+              `₹${(value / 1000).toFixed(0)}k`
+            }
+            tickMargin={10}
+            tickLine={false}
+            axisLine={false}
+          />
 
-        <Tooltip content={<CustomTooltip />} />
+          <Tooltip
+            cursor={{
+              fill: "rgba(59,130,246,0.08)",
+            }}
+            content={<CustomTooltip />}
+          />
 
-        <Bar dataKey="amount" radius={[6, 6, 0, 0]} maxBarSize={36}>
-          {data.map((entry, index) => (
-            <Cell key={index} fill={BAR_COLOR} cursor="pointer" />
-          ))}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+          <Bar
+            dataKey="amount"
+            radius={[12, 12, 0, 0]}
+            maxBarSize={42}
+            animationDuration={900}
+          >
+            {data.map((entry, index) => (
+              <Cell
+                key={index}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

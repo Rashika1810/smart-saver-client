@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { X } from "lucide-react";
+
 import api from "../../api/axios";
 import RecurringForm from "./RecurringForm";
 
-export default function EditRecurringModal({ recurring, close, refresh }) {
+export default function EditRecurringModal({
+  recurring,
+  close,
+  refresh,
+}) {
   const [loading, setLoading] = useState(false);
 
   const update = async (form) => {
@@ -15,7 +21,6 @@ export default function EditRecurringModal({ recurring, close, refresh }) {
       toast.success("Recurring transaction updated");
 
       refresh();
-
       close();
     } catch {
       toast.error("Update failed");
@@ -25,26 +30,47 @@ export default function EditRecurringModal({ recurring, close, refresh }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-xl rounded-xl border border-zinc-800 bg-zinc-900 shadow-xl max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between border-b border-zinc-800 px-6 py-4">
-          <h2 className="text-xl font-semibold"> Recurring Transaction</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+
+      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
+
+        {/* Header */}
+
+        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-5">
+
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Edit Recurring Transaction
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              Update your recurring transaction details.
+            </p>
+          </div>
 
           <button
             onClick={close}
-            className="text-zinc-400 hover:text-white text-xl"
+            className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
           >
-            ✕
+            <X size={20} />
           </button>
+
         </div>
-        <div className="overflow-y-auto max-h-[calc(90vh-72px)] p-6">
+
+        {/* Form */}
+
+        <div className="max-h-[80vh] overflow-y-auto p-6">
+
           <RecurringForm
             initialData={recurring}
             onSubmit={update}
             loading={loading}
           />
+
         </div>
+
       </div>
+
     </div>
   );
 }

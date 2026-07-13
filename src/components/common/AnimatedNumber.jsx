@@ -2,37 +2,47 @@ import { useEffect, useRef, useState } from "react";
 
 export default function AnimatedNumber({
   value = 0,
-  duration = 1200,
+  duration = 1000,
   prefix = "",
 }) {
-  const [display, setDisplay] = useState(0);
-  const frame = useRef();
+  const [display, setDisplay] = useState(Number(value) || 0);
+
+  const frameRef = useRef(null);
+  const previousValue = useRef(Number(value) || 0);
 
   useEffect(() => {
-    const start = performance.now();
-    const from = display;
-    const to = Number(value) || 0;
+    const startValue = previousValue.current;
+    const endValue = Number(value) || 0;
 
-    const animate = (time) => {
-      const progress = Math.min((time - start) / duration, 1);
+    const startTime = performance.now();
 
-      // easeOutCubic
+    const animate = (currentTime) => {
+      const progress = Math.min(
+        (currentTime - startTime) / duration,
+        1
+      );
+
+      // Ease Out Cubic
       const eased = 1 - Math.pow(1 - progress, 3);
 
-      const current = from + (to - from) * eased;
+      const current =
+        startValue + (endValue - startValue) * eased;
 
       setDisplay(current);
 
       if (progress < 1) {
-        frame.current = requestAnimationFrame(animate);
+        frameRef.current = requestAnimationFrame(animate);
+      } else {
+        previousValue.current = endValue;
       }
     };
 
-    frame.current = requestAnimationFrame(animate);
+    cancelAnimationFrame(frameRef.current);
 
-    return () => cancelAnimationFrame(frame.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+    frameRef.current = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(frameRef.current);
+  }, [value, duration]);
 
   return (
     <>
