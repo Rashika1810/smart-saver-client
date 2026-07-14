@@ -1,17 +1,14 @@
 import { useState } from "react";
 import {
   Calendar,
-  DollarSign,
+  IndianRupee,
   FileText,
   Layers,
   Repeat,
   Tag,
 } from "lucide-react";
-
-import {
-  expenseCategories,
-  incomeCategories,
-} from "../../utils/categories";
+import Button from "../ui/Button";
+import { expenseCategories, incomeCategories } from "../../utils/categories";
 
 const initialState = {
   amount: "",
@@ -22,17 +19,11 @@ const initialState = {
   startDate: new Date().toISOString().split("T")[0],
 };
 
-export default function RecurringForm({
-  initialData,
-  onSubmit,
-  loading,
-}) {
+export default function RecurringForm({ initialData, onSubmit, loading }) {
   const [form, setForm] = useState(initialData || initialState);
 
   const categories =
-    form.type === "income"
-      ? incomeCategories
-      : expenseCategories;
+    form.type === "income" ? incomeCategories : expenseCategories;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,17 +44,13 @@ export default function RecurringForm({
     "w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
 
   return (
-    <form
-      onSubmit={submit}
-      className="space-y-6"
-    >
+    <form onSubmit={submit} className="space-y-6">
       {/* Amount & Type */}
 
       <div className="grid gap-5 md:grid-cols-2">
-
         <div>
           <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-            <DollarSign size={16} />
+            <IndianRupee size={16} />
             Amount
           </label>
 
@@ -96,13 +83,11 @@ export default function RecurringForm({
             <option value="income">Income</option>
           </select>
         </div>
-
       </div>
 
       {/* Category */}
 
       <div>
-
         <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
           <Tag size={16} />
           Category
@@ -115,27 +100,19 @@ export default function RecurringForm({
           required
           className={inputClass}
         >
-          <option value="">
-            Choose a category
-          </option>
+          <option value="">Choose a category</option>
 
           {categories.map((category) => (
-            <option
-              key={category}
-              value={category}
-            >
+            <option key={category} value={category}>
               {category}
             </option>
           ))}
-
         </select>
-
       </div>
 
       {/* Description */}
 
       <div>
-
         <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
           <FileText size={16} />
           Description
@@ -149,15 +126,12 @@ export default function RecurringForm({
           onChange={handleChange}
           className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition resize-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
         />
-
       </div>
 
       {/* Frequency & Start Date */}
 
       <div className="grid gap-5 md:grid-cols-2">
-
         <div>
-
           <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
             <Repeat size={16} />
             Repeat Every
@@ -174,11 +148,9 @@ export default function RecurringForm({
             <option value="monthly">Monthly</option>
             <option value="yearly">Yearly</option>
           </select>
-
         </div>
 
         <div>
-
           <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
             <Calendar size={16} />
             Start Date
@@ -191,23 +163,13 @@ export default function RecurringForm({
             onChange={handleChange}
             className={inputClass}
           />
-
         </div>
-
       </div>
 
       {/* Submit */}
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="h-12 w-full rounded-xl bg-blue-600 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {loading
-          ? "Saving..."
-          : "Save Recurring Transaction"}
-      </button>
-
+      <Button type="submit" loading={loading} variant="info" className="w-full">
+        Save Recurring Transaction
+      </Button>
     </form>
   );
 }

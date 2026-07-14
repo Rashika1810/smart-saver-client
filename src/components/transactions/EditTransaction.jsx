@@ -1,19 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  Calendar,
-  IndianRupee,
-  FileText,
-  Layers,
-  Tag,
-} from "lucide-react";
-
+import { Calendar, IndianRupee, FileText, Layers, Tag } from "lucide-react";
+import Button from "../ui/Button";
 import api from "../../api/axios";
-import {
-  expenseCategories,
-  incomeCategories,
-} from "../../utils/categories";
+import { expenseCategories, incomeCategories } from "../../utils/categories";
 
 const initialState = {
   amount: "",
@@ -31,9 +22,7 @@ export default function EditTransaction() {
   const [loading, setLoading] = useState(true);
 
   const categories =
-    form.type === "income"
-      ? incomeCategories
-      : expenseCategories;
+    form.type === "income" ? incomeCategories : expenseCategories;
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
@@ -94,9 +83,7 @@ export default function EditTransaction() {
       <div className="max-w-3xl mx-auto px-6 py-16">
         <div className="rounded-2xl border border-gray-200 bg-white p-10 shadow-sm text-center">
           <div className="h-10 w-10 mx-auto rounded-full border-4 border-blue-600 border-t-transparent animate-spin" />
-          <p className="mt-5 text-gray-500">
-            Loading transaction...
-          </p>
+          <p className="mt-5 text-gray-500">Loading transaction...</p>
         </div>
       </div>
     );
@@ -104,13 +91,10 @@ export default function EditTransaction() {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
-
       {/* Header */}
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Edit Transaction
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900">Edit Transaction</h1>
 
         <p className="mt-2 text-gray-500">
           Update the details of your transaction.
@@ -123,13 +107,11 @@ export default function EditTransaction() {
         onSubmit={handleSubmit}
         className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
       >
-
         <h2 className="mb-8 text-xl font-semibold text-gray-900">
           Transaction Details
         </h2>
 
         <div className="space-y-6">
-
           {/* Amount */}
 
           <div>
@@ -195,10 +177,7 @@ export default function EditTransaction() {
               </option>
 
               {categories.map((category) => (
-                <option
-                  key={category}
-                  value={category}
-                >
+                <option key={category} value={category}>
                   {category}
                 </option>
               ))}
@@ -244,28 +223,21 @@ export default function EditTransaction() {
           {/* Buttons */}
 
           <div className="flex gap-4 pt-2">
-
-            <button
+            <Button
               type="button"
+              variant="secondary"
               onClick={() => navigate(-1)}
-              className="flex-1 h-12 rounded-xl border border-gray-300 bg-white font-medium text-gray-700 hover:bg-gray-100 transition"
+              className="flex-1"
             >
               Cancel
-            </button>
+            </Button>
 
-            <button
-              type="submit"
-              className="flex-1 h-12 rounded-xl bg-blue-600 font-semibold text-white hover:bg-blue-700 transition"
-            >
+            <Button type="submit" variant="info" className="flex-1">
               Update Transaction
-            </button>
-
+            </Button>
           </div>
-
         </div>
-
       </form>
-
     </div>
   );
 }

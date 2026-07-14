@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import Button from "../../components/ui/Button";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -64,7 +65,6 @@ const Register = () => {
       {/* Left Section */}
       <div className="hidden lg:flex items-center bg-blue-50 border-r border-blue-100">
         <div className="max-w-lg mx-auto px-12">
-
           <h2 className="mt-8 text-5xl font-semibold text-gray-900 leading-tight">
             Expense Tracker
           </h2>
@@ -113,7 +113,9 @@ const Register = () => {
               </div>
 
               <div>
-                <h3 className="font-semibold text-gray-900">Visual Reports</h3>
+                <h3 className="font-semibold text-gray-900">
+                  Visual Reports
+                </h3>
 
                 <p className="mt-1 text-sm text-gray-500">
                   Understand your finances with clean charts and summaries.
@@ -128,7 +130,9 @@ const Register = () => {
       <div className="flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-semibold text-gray-900">Create Account</h2>
+            <h2 className="text-3xl font-semibold text-gray-900">
+              Create Account
+            </h2>
 
             <p className="mt-2 text-gray-500">
               Start your journey toward smarter financial management.
@@ -193,12 +197,13 @@ const Register = () => {
               special character.
             </p>
 
-            <button
+            <Button
               type="submit"
-              className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700"
+              variant="info"
+              className="w-full"
             >
               Create Account
-            </button>
+            </Button>
           </form>
 
           <p className="mt-6 border-t border-gray-200 pt-5 text-center text-gray-500">

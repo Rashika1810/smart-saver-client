@@ -6,6 +6,7 @@ import RecentTransactions from "../components/dashboard/RecentTransactions";
 import { useNavigate } from "react-router-dom";
 import AIInsightPopup from "../components/dashboard/AIInsightPopup";
 import OpeningBalanceModal from "../components/common/OpeningBalanceModal";
+import Button from "../components/ui/Button";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ export default function Dashboard() {
       setLoading(false);
     }
   }, []);
+
   const handleOpeningBalance = async (value) => {
     try {
       const response = await updateOpeningBalance(value);
@@ -88,6 +90,7 @@ export default function Dashboard() {
         const { data } = await getProfile();
 
         setUser(data);
+
         if (!data.openingBalanceSet) {
           setTimeout(() => {
             setShowOpeningBalanceModal(true);
@@ -126,26 +129,25 @@ export default function Dashboard() {
         </div>
 
         {/* Summary Cards */}
-
         <div className="mb-10">
           <SummaryCards summary={summary} />
+
           <div className="mt-4 flex justify-end">
-            <button
+            <Button
+              variant="info"
               onClick={() => {
                 setOpeningBalance(summary.openingBalance || 0);
                 setShowOpeningBalanceModal(true);
               }}
-              className="rounded-lg border border-blue-600 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
             >
               {user?.openingBalanceSet
                 ? "Edit Opening Balance"
                 : "Set Opening Balance"}
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Recent Transactions */}
-
         <section className="bg-white border border-gray-200 rounded-2xl shadow-sm">
           <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
             <div>
@@ -158,17 +160,12 @@ export default function Dashboard() {
               </p>
             </div>
 
-            <button
+            <Button
+              variant="info"
               onClick={() => navigate("/transactions")}
-              className="
-              text-blue-600
-              font-medium
-              hover:text-blue-700
-              transition-colors
-            "
             >
               View all →
-            </button>
+            </Button>
           </div>
 
           <div className="p-6">
@@ -184,6 +181,7 @@ export default function Dashboard() {
           </div>
         </section>
       </div>
+
       <OpeningBalanceModal
         isOpen={showOpeningBalanceModal}
         currentBalance={openingBalance}

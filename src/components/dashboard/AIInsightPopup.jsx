@@ -9,7 +9,7 @@ import {
   TriangleAlert,
   HeartHandshake,
 } from "lucide-react";
-
+import Button from "../ui/Button";
 import api from "../../api/axios";
 
 export default function AIInsightPopup() {
@@ -135,12 +135,13 @@ export default function AIInsightPopup() {
                 {error}
               </p>
 
-              <button
-                onClick={fetchInsight}
-                className="mt-4 rounded-xl bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-              >
-                Try Again
-              </button>
+              <Button
+  variant="info"
+  className="mt-4"
+  onClick={fetchInsight}
+>
+  Try Again
+</Button>
 
             </div>
           )}

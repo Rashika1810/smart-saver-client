@@ -5,8 +5,12 @@ import api from "../api/axios";
 import Filters from "../components/dashboard/Filters";
 import TransactionTable from "../components/dashboard/TransactionTable";
 import TransactionTableSkeleton from "../components/dashboard/TransactionTableSkeleton";
+import { useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
+import Button from "../components/ui/Button";
 
 export default function Transactions() {
+  const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -82,14 +86,23 @@ export default function Transactions() {
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-8 py-10">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Transactions</h1>
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Transactions</h1>
 
-          <p className="mt-2 text-gray-500">
-            View, search, and manage all your income and expenses.
-          </p>
+            <p className="mt-2 text-gray-500">
+              View, search, and manage all your income and expenses.
+            </p>
+          </div>
+
+          <Button
+            variant="info"
+            icon={<Plus size={18} />}
+            onClick={() => navigate("/add-transaction")}
+          >
+            Add Transaction
+          </Button>
         </div>
-
         {/* Filters */}
         <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <Filters filters={filters} setFilters={setFilters} />

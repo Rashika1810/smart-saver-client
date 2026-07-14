@@ -7,6 +7,7 @@ import api from "../api/axios";
 import RecurringCard from "../components/recurring/RecurringCard";
 import AddRecurringModal from "../components/recurring/AddRecurringModal";
 import EditRecurringModal from "../components/recurring/EditRecurringModal";
+import Button from "../components/ui/Button";
 
 export default function RecurringTransactions() {
   const [transactions, setTransactions] = useState([]);
@@ -43,12 +44,9 @@ export default function RecurringTransactions() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10">
-
+    <div className="mx-auto max-w-7xl px-6 py-10">
       {/* Header */}
-
-      <div className="flex flex-col gap-5 mb-10 lg:flex-row lg:items-center lg:justify-between">
-
+      <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
             Recurring Transactions
@@ -60,34 +58,28 @@ export default function RecurringTransactions() {
         </div>
 
         <div className="flex flex-wrap gap-3">
-
-          <button
+          <Button
+            variant="success"
+            icon={<RefreshCw size={18} />}
             onClick={generateToday}
-            className="inline-flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-5 py-3 font-medium text-green-700 transition hover:bg-green-100"
           >
-            <RefreshCw size={18} />
             Generate Today
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="info"
+            icon={<Plus size={18} />}
             onClick={() => setShowAdd(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
           >
-            <Plus size={18} />
             Add Recurring
-          </button>
-
+          </Button>
         </div>
-
       </div>
 
       {/* Empty State */}
-
       {transactions.length === 0 ? (
         <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-
           <div className="flex flex-col items-center px-8 py-20 text-center">
-
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
               <CalendarSync
                 size={38}
@@ -104,16 +96,15 @@ export default function RecurringTransactions() {
               subscriptions, salaries, rent and other regular payments.
             </p>
 
-            <button
+            <Button
+              variant="info"
+              className="mt-8"
+              icon={<Plus size={18} />}
               onClick={() => setShowAdd(true)}
-              className="mt-8 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
             >
-              <Plus size={18} />
               Create First Recurring
-            </button>
-
+            </Button>
           </div>
-
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -142,7 +133,6 @@ export default function RecurringTransactions() {
           refresh={fetchRecurring}
         />
       )}
-
     </div>
   );
 }

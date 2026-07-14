@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, Plus, LogOut, Upload } from "lucide-react";
+import { Menu, X, LogOut, Upload } from "lucide-react";
+import Button from "../ui/Button";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -41,7 +42,6 @@ export default function Navbar() {
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
           {/* Logo */}
-
           <Link
             to="/"
             className="text-2xl font-bold tracking-tight text-gray-900"
@@ -51,7 +51,6 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-
           <nav className="hidden md:flex items-center gap-2">
             <NavLink end to="/" className={navClass}>
               Dashboard
@@ -68,25 +67,18 @@ export default function Navbar() {
             <NavLink to="/recurring" className={navClass}>
               Recurring
             </NavLink>
+
             <NavLink to="/import-statement" className={navClass}>
               Import Statement
             </NavLink>
           </nav>
 
           {/* Right */}
-
           <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => navigate("/add-transaction")}
-              className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 transition"
-            >
-              <Plus size={18} />
-              Add
-            </button>
 
             {user && (
               <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-3 py-2">
-                <div className="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center font-semibold text-blue-700">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-700">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
 
@@ -102,17 +94,16 @@ export default function Navbar() {
 
             <button
               onClick={logout}
-              className="rounded-xl p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 transition"
+              className="rounded-xl p-2 text-gray-500 transition hover:bg-red-50 hover:text-red-600"
             >
               <LogOut size={20} />
             </button>
           </div>
 
           {/* Mobile */}
-
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden rounded-lg p-2 hover:bg-gray-100"
+            className="rounded-lg p-2 hover:bg-gray-100 md:hidden"
           >
             {mobileOpen ? <X /> : <Menu />}
           </button>
@@ -120,8 +111,8 @@ export default function Navbar() {
       </header>
 
       {mobileOpen && (
-        <div className="md:hidden bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto p-5 space-y-2">
+        <div className="border-b border-gray-200 bg-white md:hidden">
+          <div className="mx-auto max-w-7xl space-y-2 p-5">
             <NavLink end to="/" className={navClass}>
               Dashboard
             </NavLink>
@@ -137,29 +128,28 @@ export default function Navbar() {
             <NavLink to="/recurring" className={navClass}>
               Recurring
             </NavLink>
-            <NavLink to="/import-statement" className={navClass}>
-              Import Statement
-            </NavLink>
-            <button
-              onClick={() => navigate("/import-statement")}
-              className="flex items-center gap-2 rounded-xl border border-blue-600 px-4 py-2 text-blue-600 font-medium hover:bg-blue-50 transition"
+
+            <NavLink
+              to="/import-statement"
+              className={({ isActive }) =>
+                `flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  isActive
+                    ? "bg-blue-50 text-blue-600"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                }`
+              }
             >
               <Upload size={18} />
-              Import
-            </button>
-            <button
-              onClick={() => navigate("/add-transaction")}
-              className="w-full mt-4 rounded-xl bg-blue-600 py-3 text-white font-medium"
-            >
-              + Add Transaction
-            </button>
+              Import Statement
+            </NavLink>
 
-            <button
+            <Button
+              variant="secondary"
+              className="w-full"
               onClick={logout}
-              className="w-full rounded-xl border border-gray-300 py-3 text-gray-700 hover:bg-gray-100"
             >
               Logout
-            </button>
+            </Button>
           </div>
         </div>
       )}

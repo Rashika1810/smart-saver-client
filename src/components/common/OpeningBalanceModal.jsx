@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Button from "../ui/Button";
 
 export default function OpeningBalanceModal({
   isOpen,
@@ -51,37 +52,16 @@ export default function OpeningBalanceModal({
           />
 
           <div className="mt-8 flex justify-end gap-3">
-            <button
-              onClick={onCancel}
-              className="
-                rounded-xl
-                border
-                border-gray-300
-                bg-white
-                px-5
-                py-2.5
-                font-medium
-                text-gray-700
-                hover:bg-gray-100
-              "
-            >
+            <Button variant="secondary" onClick={onCancel}>
               Cancel
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant="info"
               onClick={() => onSave(Number(value || 0))}
-              className="
-                rounded-xl
-                bg-blue-600
-                px-5
-                py-2.5
-                font-medium
-                text-white
-                hover:bg-blue-700
-              "
             >
               Save
-            </button>
+            </Button>
           </div>
         </div>
       </div>

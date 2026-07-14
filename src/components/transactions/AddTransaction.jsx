@@ -1,20 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  Calendar,
-  IndianRupee,
-  FileText,
-  Layers,
-  Tag,
-} from "lucide-react";
-
+import { Calendar, IndianRupee, FileText, Layers, Tag } from "lucide-react";
+import Button from "../ui/Button";
 import api from "../../api/axios";
 import FavoriteQuickAdd from "../favorites/FavoriteQuickAdd";
-import {
-  expenseCategories,
-  incomeCategories,
-} from "../../utils/categories";
+import { expenseCategories, incomeCategories } from "../../utils/categories";
 
 const initialState = {
   amount: "",
@@ -32,9 +23,7 @@ export default function AddTransaction() {
   const [highlight, setHighlight] = useState(false);
 
   const categories =
-    form.type === "income"
-      ? incomeCategories
-      : expenseCategories;
+    form.type === "income" ? incomeCategories : expenseCategories;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -70,8 +59,7 @@ export default function AddTransaction() {
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.message ||
-          "Failed to save transaction"
+        error.response?.data?.message || "Failed to save transaction",
       );
     }
   };
@@ -81,13 +69,10 @@ export default function AddTransaction() {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
-
       {/* Header */}
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Add Transaction
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900">Add Transaction</h1>
 
         <p className="mt-2 text-gray-500">
           Record your income or expenses to keep your finances organized.
@@ -97,7 +82,6 @@ export default function AddTransaction() {
       {/* Quick Templates */}
 
       <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-
         <FavoriteQuickAdd
           onSelect={(favorite) => {
             setForm({
@@ -111,7 +95,6 @@ export default function AddTransaction() {
             setTimeout(() => setHighlight(false), 600);
           }}
         />
-
       </div>
 
       {/* Form */}
@@ -124,17 +107,14 @@ export default function AddTransaction() {
             : "border-gray-200"
         }`}
       >
-
         <h2 className="mb-8 text-xl font-semibold text-gray-900">
           Transaction Details
         </h2>
 
         <div className="space-y-6">
-
           {/* Amount */}
 
           <div>
-
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <IndianRupee size={16} />
               Amount
@@ -151,13 +131,11 @@ export default function AddTransaction() {
               required
               className={inputClass}
             />
-
           </div>
 
           {/* Type */}
 
           <div>
-
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <Layers size={16} />
               Transaction Type
@@ -174,13 +152,11 @@ export default function AddTransaction() {
               <option value="income">Income</option>
               <option value="expense">Expense</option>
             </select>
-
           </div>
 
           {/* Category */}
 
           <div>
-
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <Tag size={16} />
               Category
@@ -201,22 +177,16 @@ export default function AddTransaction() {
               </option>
 
               {categories.map((category) => (
-                <option
-                  key={category}
-                  value={category}
-                >
+                <option key={category} value={category}>
                   {category}
                 </option>
               ))}
-
             </select>
-
           </div>
 
           {/* Date */}
 
           <div>
-
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <Calendar size={16} />
               Transaction Date
@@ -230,13 +200,11 @@ export default function AddTransaction() {
               required
               className={inputClass}
             />
-
           </div>
 
           {/* Description */}
 
           <div>
-
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <FileText size={16} />
               Description
@@ -250,13 +218,11 @@ export default function AddTransaction() {
               onChange={handleChange}
               className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 resize-none"
             />
-
           </div>
 
           {/* Save Template */}
 
           <label className="flex items-center gap-3 rounded-xl bg-gray-50 p-4">
-
             <input
               type="checkbox"
               name="saveAsFavorite"
@@ -268,22 +234,15 @@ export default function AddTransaction() {
             <span className="text-sm text-gray-700">
               Save this transaction as a reusable template
             </span>
-
           </label>
 
           {/* Button */}
 
-          <button
-            type="submit"
-            className="w-full h-12 rounded-xl bg-blue-600 text-white font-semibold transition hover:bg-blue-700"
-          >
+          <Button type="submit" variant="info" className="w-full">
             Add Transaction
-          </button>
-
+          </Button>
         </div>
-
       </form>
-
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import { UploadCloud, FileText, Loader2 } from "lucide-react";
+import { UploadCloud, FileText } from "lucide-react";
 import { toast } from "react-toastify";
-
+import Button from "../ui/Button";
 export default function UploadCard({
   onUpload,
   loading,
@@ -115,24 +115,14 @@ export default function UploadCard({
 
       {/* Button */}
 
-      <button
-        onClick={handleImport}
-        disabled={loading}
-        className="mt-8 w-full rounded-xl bg-indigo-600 text-white py-3 font-semibold hover:bg-indigo-700 disabled:opacity-60 flex items-center justify-center gap-2"
-      >
-        {loading ? (
-          <>
-            <Loader2
-              className="animate-spin"
-              size={20}
-            />
-
-            Importing...
-          </>
-        ) : (
-          "Import Statement"
-        )}
-      </button>
+    <Button
+  variant="info"
+  className="mt-8 w-full"
+  loading={loading}
+  onClick={handleImport}
+>
+  {loading ? "Importing..." : "Import Statement"}
+</Button>
     </div>
   );
 }

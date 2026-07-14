@@ -1,3 +1,5 @@
+import Button from "../ui/Button";
+
 export default function ConfirmModal({
   isOpen,
   title = "Confirm Action",
@@ -18,39 +20,13 @@ export default function ConfirmModal({
           <p className="mt-3 text-gray-600 leading-relaxed">{message}</p>
 
           <div className="mt-8 flex justify-end gap-3">
-            <button
-              onClick={onCancel}
-              className="
-                rounded-xl
-                border
-                border-gray-300
-                bg-white
-                px-5
-                py-2.5
-                font-medium
-                text-gray-700
-                hover:bg-gray-100
-                transition
-              "
-            >
+            <Button variant="secondary" onClick={onCancel}>
               {cancelText}
-            </button>
+            </Button>
 
-            <button
-              onClick={onConfirm}
-              className="
-                rounded-xl
-                bg-red-600
-                px-5
-                py-2.5
-                font-medium
-                text-white
-                hover:bg-red-700
-                transition
-              "
-            >
+            <Button variant="danger" onClick={onConfirm}>
               {confirmText}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
