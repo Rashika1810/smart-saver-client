@@ -1,35 +1,56 @@
 export default function TransactionTableSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-      {/* Table Header */}
-      <div className="grid grid-cols-6 gap-4 border-b border-gray-200 px-6 py-4">
-        {[90, 120, 80, 120, 100, 80].map((width, index) => (
-          <div
-            key={index}
-            className="h-4 animate-pulse rounded bg-gray-200"
-            style={{ width: `${width}px` }}
-          />
-        ))}
-      </div>
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <table className="w-full table-fixed">
+        <thead className="border-b border-gray-200 bg-gray-50">
+          <tr>
+            <th className="px-6 py-4"></th>
+            <th className="px-6 py-4"></th>
+            <th className="px-6 py-4"></th>
+            <th className="px-6 py-4"></th>
+            <th className="px-6 py-4"></th>
+            <th className="px-6 py-4"></th>
+          </tr>
+        </thead>
 
-      {/* Table Rows */}
-      {Array.from({ length: 8 }).map((_, row) => (
-        <div
-          key={row}
-          className="grid grid-cols-6 items-center gap-4 border-b border-gray-100 px-6 py-5 last:border-b-0"
-        >
-          <div className="h-4 w-28 animate-pulse rounded bg-gray-200" />
-          <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
-          <div className="h-6 w-20 animate-pulse rounded-full bg-gray-200" />
-          <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
-          <div className="h-4 w-32 animate-pulse rounded bg-gray-200" />
+        <tbody>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <tr
+              key={i}
+              className={`border-b border-gray-100 ${
+                i % 2 === 0 ? "bg-white" : "bg-gray-50"
+              }`}
+            >
+              <td className="px-6 py-5">
+                <div className="h-4 w-32 rounded bg-gray-200" />
+              </td>
 
-          <div className="flex justify-end gap-2">
-            <div className="h-9 w-16 animate-pulse rounded-lg bg-gray-200" />
-            <div className="h-9 w-16 animate-pulse rounded-lg bg-gray-200" />
-          </div>
-        </div>
-      ))}
+              <td className="px-6 py-5">
+                <div className="h-4 w-24 rounded bg-gray-200" />
+              </td>
+
+              <td className="px-6 py-5">
+                <div className="h-6 w-20 rounded-full bg-gray-200" />
+              </td>
+
+              <td className="px-6 py-5">
+                <div className="h-4 w-24 rounded bg-gray-200" />
+              </td>
+
+              <td className="px-6 py-5">
+                <div className="h-4 w-28 rounded bg-gray-200" />
+              </td>
+
+              <td className="px-6 py-5">
+                <div className="flex justify-end gap-2">
+                  <div className="h-8 w-8 rounded-md bg-gray-200" />
+                  <div className="h-8 w-8 rounded-md bg-gray-200" />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

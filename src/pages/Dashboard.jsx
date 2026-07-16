@@ -148,7 +148,7 @@ export default function Dashboard() {
         </div>
 
         {/* Recent Transactions */}
-        <section className="bg-white border border-gray-200 rounded-2xl shadow-sm">
+        <section className="bg-white border border-gray-200 rounded-md shadow-sm">
           <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
             <div>
               <h2 className="text-xl font-semibold text-gray-900">
@@ -160,23 +160,18 @@ export default function Dashboard() {
               </p>
             </div>
 
-            <Button
-              variant="info"
-              onClick={() => navigate("/transactions")}
-            >
+            <Button variant="info" onClick={() => navigate("/transactions")}>
               View all →
             </Button>
           </div>
 
           <div className="p-6">
-            {loading ? (
-              <p className="text-gray-500">Loading transactions...</p>
-            ) : transactions.length === 0 ? (
+            {!loading && transactions.length === 0 ? (
               <div className="py-12 text-center text-gray-500">
                 No transactions yet.
               </div>
             ) : (
-              <RecentTransactions data={transactions} />
+              <RecentTransactions data={transactions} loading={loading} />
             )}
           </div>
         </section>

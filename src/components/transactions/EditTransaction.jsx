@@ -23,31 +23,29 @@ export default function EditTransaction() {
 
   const categories =
     form.type === "income" ? incomeCategories : expenseCategories;
-
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/immutability
+    const fetchTransaction = async () => {
+      try {
+        const { data } = await api.get(`/transactions/${id}`);
+
+        const t = data.data;
+
+        setForm({
+          amount: t.amount || "",
+          type: t.type || "",
+          category: t.category || "",
+          description: t.description || "",
+          date: t.date?.split("T")[0] || "",
+        });
+      } catch {
+        toast.error("Unable to load transaction.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchTransaction();
   }, [id]);
-
-  const fetchTransaction = async () => {
-    try {
-      const { data } = await api.get(`/transactions/${id}`);
-
-      const t = data.data;
-
-      setForm({
-        amount: t.amount || "",
-        type: t.type || "",
-        category: t.category || "",
-        description: t.description || "",
-        date: t.date?.split("T")[0] || "",
-      });
-    } catch {
-      toast.error("Unable to load transaction.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,12 +74,11 @@ export default function EditTransaction() {
   };
 
   const inputClass =
-    "w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
-
+    "w-full h-12 rounded-md border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-16">
-        <div className="rounded-2xl border border-gray-200 bg-white p-10 shadow-sm text-center">
+        <div className="rounded-md border border-gray-200 bg-white p-10 shadow-sm text-center">
           <div className="h-10 w-10 mx-auto rounded-full border-4 border-blue-600 border-t-transparent animate-spin" />
           <p className="mt-5 text-gray-500">Loading transaction...</p>
         </div>
@@ -105,7 +102,7 @@ export default function EditTransaction() {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
+        className="rounded-md border border-gray-200 bg-white p-8 shadow-sm"
       >
         <h2 className="mb-8 text-xl font-semibold text-gray-900">
           Transaction Details
@@ -216,7 +213,7 @@ export default function EditTransaction() {
               value={form.description}
               onChange={handleChange}
               placeholder="Add a note (optional)"
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 resize-none"
+              className="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 resize-none"
             />
           </div>
 

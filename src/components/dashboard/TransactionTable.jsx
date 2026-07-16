@@ -37,14 +37,12 @@ export default function TransactionTable({
 
   return (
     <>
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-md border border-gray-200 bg-white shadow">
         <div
-          className={`max-h-[560px] overflow-auto transition-opacity duration-300 ${
-            pageLoading ? "opacity-60" : "opacity-100"
-          }`}
+          className="max-h-[560px] overflow-auto transition-opacity duration-300"
         >
           <table className="min-w-full">
-            <thead className="sticky top-0 bg-white border-b border-gray-200 z-10">
+            <thead className="sticky top-0 z-10 border-b border-gray-300 bg-gray-100">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
                   Date
@@ -73,10 +71,14 @@ export default function TransactionTable({
             </thead>
 
             <tbody>
-              {data.map((t) => (
+              {data.map((t, index) => (
                 <tr
                   key={t._id}
-                  className="border-b border-gray-100 hover:bg-slate-50 transition-colors"
+                  className={`border-b border-gray-200 transition-colors ${
+                    index % 2 === 0
+                      ? "bg-white hover:bg-gray-100"
+                      : "bg-gray-50 hover:bg-gray-100"
+                  }`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-gray-700">
                     {formatDate(t.date)}
@@ -88,7 +90,7 @@ export default function TransactionTable({
 
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                      className={`inline-flex rounded-md px-2.5 py-1 text-xs font-semibold ${
                         t.type === "income"
                           ? "bg-green-100 text-green-700"
                           : "bg-red-100 text-red-700"
@@ -129,7 +131,7 @@ export default function TransactionTable({
           </table>
         </div>
 
-        <div className="flex items-center justify-between border-t border-gray-200 bg-white px-6 py-4">
+        <div className="flex items-center justify-between border-t border-gray-300 bg-gray-100 px-6 py-4">
           <Button
             variant="secondary"
             disabled={page === 1 || pageLoading}

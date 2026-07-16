@@ -65,14 +65,15 @@ export default function AddTransaction() {
   };
 
   const inputClass =
-    "w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
+    "w-full h-12 rounded-md border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
       {/* Header */}
-
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Add Transaction</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Add Transaction
+        </h1>
 
         <p className="mt-2 text-gray-500">
           Record your income or expenses to keep your finances organized.
@@ -80,8 +81,7 @@ export default function AddTransaction() {
       </div>
 
       {/* Quick Templates */}
-
-      <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mb-8 rounded-md border border-gray-200 bg-white p-6 shadow-sm">
         <FavoriteQuickAdd
           onSelect={(favorite) => {
             setForm({
@@ -98,10 +98,9 @@ export default function AddTransaction() {
       </div>
 
       {/* Form */}
-
       <form
         onSubmit={handleSubmit}
-        className={`rounded-2xl border bg-white p-8 shadow-sm transition-all duration-300 ${
+        className={`rounded-md border bg-white p-8 shadow-sm transition-all duration-300 ${
           highlight
             ? "border-green-400 ring-2 ring-green-100"
             : "border-gray-200"
@@ -113,7 +112,6 @@ export default function AddTransaction() {
 
         <div className="space-y-6">
           {/* Amount */}
-
           <div>
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <IndianRupee size={16} />
@@ -134,7 +132,6 @@ export default function AddTransaction() {
           </div>
 
           {/* Type */}
-
           <div>
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <Layers size={16} />
@@ -155,7 +152,6 @@ export default function AddTransaction() {
           </div>
 
           {/* Category */}
-
           <div>
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <Tag size={16} />
@@ -185,7 +181,6 @@ export default function AddTransaction() {
           </div>
 
           {/* Date */}
-
           <div>
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <Calendar size={16} />
@@ -203,7 +198,6 @@ export default function AddTransaction() {
           </div>
 
           {/* Description */}
-
           <div>
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
               <FileText size={16} />
@@ -216,13 +210,12 @@ export default function AddTransaction() {
               placeholder="Add a note (optional)"
               value={form.description}
               onChange={handleChange}
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 resize-none"
+              className="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 resize-none"
             />
           </div>
 
           {/* Save Template */}
-
-          <label className="flex items-center gap-3 rounded-xl bg-gray-50 p-4">
+          <label className="flex items-center gap-3 rounded-md border border-gray-200 bg-gray-50 p-4">
             <input
               type="checkbox"
               name="saveAsFavorite"
@@ -237,7 +230,6 @@ export default function AddTransaction() {
           </label>
 
           {/* Button */}
-
           <Button type="submit" variant="info" className="w-full">
             Add Transaction
           </Button>

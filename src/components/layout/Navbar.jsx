@@ -75,21 +75,10 @@ export default function Navbar() {
 
           {/* Right */}
           <div className="hidden md:flex items-center gap-3">
-
             {user && (
-              <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-3 py-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-700">
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
-
-                <div className="leading-tight">
-                  <p className="text-sm font-medium text-gray-900">
-                    {user.name}
-                  </p>
-
-                  <p className="text-xs text-gray-500">Welcome back</p>
-                </div>
-              </div>
+              <button className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white font-semibold">
+                {user.name.charAt(0).toUpperCase()}
+              </button>
             )}
 
             <button
@@ -143,11 +132,7 @@ export default function Navbar() {
               Import Statement
             </NavLink>
 
-            <Button
-              variant="secondary"
-              className="w-full"
-              onClick={logout}
-            >
+            <Button variant="secondary" className="w-full" onClick={logout}>
               Logout
             </Button>
           </div>

@@ -26,9 +26,9 @@ export default function AddRecurringModal({ close, refresh }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
 
-      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
+      <div className="w-full max-w-2xl overflow-hidden rounded-md border border-gray-200 bg-white shadow-md">
 
         {/* Header */}
 
@@ -46,7 +46,7 @@ export default function AddRecurringModal({ close, refresh }) {
 
           <button
             onClick={close}
-            className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
           >
             <X size={20} />
           </button>

@@ -104,7 +104,7 @@ export default function Transactions() {
           </Button>
         </div>
         {/* Filters */}
-        <div className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="mb-8 rounded-md border border-gray-200 bg-white p-6 shadow-sm">
           <Filters filters={filters} setFilters={setFilters} />
         </div>
 
@@ -112,7 +112,7 @@ export default function Transactions() {
         {loading ? (
           <TransactionTableSkeleton />
         ) : transactions.length === 0 ? (
-          <div className="rounded-2xl border border-gray-200 bg-white py-20 text-center shadow-sm">
+          <div className="rounded-md border border-gray-200 bg-white py-20 text-center shadow-sm">
             <h3 className="text-lg font-semibold text-gray-800">
               No transactions found
             </h3>

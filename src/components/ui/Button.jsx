@@ -1,12 +1,12 @@
 import { Loader2 } from "lucide-react";
 
 const variants = {
-  primary: "bg-zinc-500 text-white hover:bg-zinc-600",
-  secondary: "bg-zinc-600 text-white hover:bg-zinc-700",
-  success: "bg-green-500 text-white hover:bg-green-600",
-  info: "bg-blue-600 text-white hover:bg-blue-700",
-  warning: "bg-amber-500 text-white hover:bg-amber-600",
-  danger: "bg-red-600 text-white hover:bg-red-700",
+  primary: "bg-zinc-500 text-white  hover:bg-zinc-600",
+  secondary: "bg-zinc-600 text-white  hover:bg-zinc-700",
+  success: "bg-green-500 text-white  hover:bg-green-600",
+  info: "bg-blue-600 text-white  hover:bg-blue-700",
+  warning: "bg-amber-500 text-white  hover:bg-amber-600",
+  danger: "bg-red-600 text-white  hover:bg-red-700",
 };
 
 export default function Button({

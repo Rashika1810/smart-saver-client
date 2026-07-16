@@ -5,11 +5,7 @@ import { X } from "lucide-react";
 import api from "../../api/axios";
 import RecurringForm from "./RecurringForm";
 
-export default function EditRecurringModal({
-  recurring,
-  close,
-  refresh,
-}) {
+export default function EditRecurringModal({ recurring, close, refresh }) {
   const [loading, setLoading] = useState(false);
 
   const update = async (form) => {
@@ -30,14 +26,11 @@ export default function EditRecurringModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
-
-      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+      <div className="w-full max-w-2xl overflow-hidden rounded-md border border-gray-200 bg-white shadow-md">
         {/* Header */}
 
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-5">
-
           <div>
             <h2 className="text-xl font-semibold text-gray-900">
               Edit Recurring Transaction
@@ -50,27 +43,22 @@ export default function EditRecurringModal({
 
           <button
             onClick={close}
-            className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
           >
             <X size={20} />
           </button>
-
         </div>
 
         {/* Form */}
 
         <div className="max-h-[80vh] overflow-y-auto p-6">
-
           <RecurringForm
             initialData={recurring}
             onSubmit={update}
             loading={loading}
           />
-
         </div>
-
       </div>
-
     </div>
   );
 }

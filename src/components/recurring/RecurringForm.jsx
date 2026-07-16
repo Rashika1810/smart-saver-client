@@ -41,8 +41,9 @@ export default function RecurringForm({ initialData, onSubmit, loading }) {
   };
 
   const inputClass =
-    "w-full h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
-
+    "w-full h-12 rounded-md border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+  const textareaClass =
+    "w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition resize-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
   return (
     <form onSubmit={submit} className="space-y-6">
       {/* Amount & Type */}
@@ -124,7 +125,7 @@ export default function RecurringForm({ initialData, onSubmit, loading }) {
           placeholder="Example: Netflix subscription"
           value={form.description}
           onChange={handleChange}
-          className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder:text-gray-400 outline-none transition resize-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+          className={textareaClass}
         />
       </div>
 
