@@ -1,23 +1,15 @@
 export const expenseCategories = [
   "Food",
-  "Groceries",
-  "Bills",
-  "Rent",
-  "Utilities",
-  "Transport",
-  "Fuel",
   "Shopping",
-  "Entertainment",
-  "Healthcare",
-  "Education",
   "Travel",
-  "Insurance",
-  "EMI",
-  "Subscriptions",
-  "Taxes",
-  "Gifts",
-  "Personal Care",
-  "Other",
+  "Healthcare",
+  "Mobile Recharge",
+  "Cash Withdrawal",
+  "Bank Transfer",
+  "Utilities",
+  "Entertainment",
+  "Education",
+  "Others",
 ];
 
 export const incomeCategories = [
@@ -30,5 +22,5 @@ export const incomeCategories = [
   "Rental Income",
   "Refund",
   "Gift",
-  "Other",
+  "Others",
 ];

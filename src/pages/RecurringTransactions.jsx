@@ -37,23 +37,20 @@ export default function RecurringTransactions() {
       toast.success(data.message);
       navigate("/");
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Generation failed"
-      );
+      toast.error(error.response?.data?.message || "Generation failed");
     }
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-10">
+    <div className="mx-auto max-w-7xl space-y-8 px-6 py-8">
       {/* Header */}
-      <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Recurring Transactions
-          </h1>
+          <h1 className="header-title">Recurring Transactions</h1>
 
-          <p className="mt-2 text-gray-500">
-            Manage subscriptions, salaries and recurring payments in one place.
+          <p className="mt-2 max-w-2xl text-gray-500">
+            Manage subscriptions, salaries, rent, and other recurring payments
+            from one place.
           </p>
         </div>
 
@@ -78,13 +75,10 @@ export default function RecurringTransactions() {
 
       {/* Empty State */}
       {transactions.length === 0 ? (
-        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-          <div className="flex flex-col items-center px-8 py-20 text-center">
+        <div className="rounded-lg border border-gray-200 bg-white p-12 shadow-sm">
+          <div className="flex flex-col items-center text-center">
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
-              <CalendarSync
-                size={38}
-                className="text-blue-600"
-              />
+              <CalendarSync size={38} className="text-blue-600" />
             </div>
 
             <h2 className="text-2xl font-semibold text-gray-900">
@@ -93,7 +87,7 @@ export default function RecurringTransactions() {
 
             <p className="mt-3 max-w-lg text-gray-500">
               Create recurring transactions to automatically track
-              subscriptions, salaries, rent and other regular payments.
+              subscriptions, salaries, rent, EMIs, and other regular payments.
             </p>
 
             <Button

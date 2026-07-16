@@ -88,7 +88,7 @@ export default function Transactions() {
         {/* Header */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Transactions</h1>
+            <h1 className="header-title">Transactions</h1>
 
             <p className="mt-2 text-gray-500">
               View, search, and manage all your income and expenses.

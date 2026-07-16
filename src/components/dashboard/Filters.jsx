@@ -1,8 +1,5 @@
 import { Search } from "lucide-react";
-import {
-  expenseCategories,
-  incomeCategories,
-} from "../../utils/categories";
+import { expenseCategories, incomeCategories } from "../../utils/categories";
 
 export default function Filters({ filters, setFilters }) {
   const categories = [...expenseCategories, ...incomeCategories];
@@ -28,29 +25,28 @@ export default function Filters({ filters, setFilters }) {
             })
           }
           className="
-            h-12
-            w-full
-            rounded-xl
-            border
-            border-gray-300
-            bg-white
-            pl-11
-            pr-4
-            text-gray-800
-            placeholder:text-gray-400
-            focus:border-blue-500
-            focus:ring-4
-            focus:ring-blue-100
-            outline-none
-            transition
-          "
+    h-12
+    w-full
+    rounded-md
+    border
+    border-gray-300
+    bg-white
+    pl-11
+    pr-4
+    text-gray-800
+    placeholder:text-gray-400
+    focus:border-blue-500
+    focus:ring-2
+    focus:ring-blue-100
+    outline-none
+    transition-colors
+  "
         />
       </div>
 
       {/* Filters */}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-
         <select
           value={filters.month}
           onChange={(e) =>
@@ -59,7 +55,20 @@ export default function Filters({ filters, setFilters }) {
               month: e.target.value,
             })
           }
-          className="h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition"
+          className="
+  h-12
+  rounded-md
+  border
+  border-gray-300
+  bg-white
+  px-4
+  text-gray-700
+  focus:border-blue-500
+  focus:ring-2
+  focus:ring-blue-100
+  outline-none
+  transition-colors
+"
         >
           <option value="all">All Months</option>
           <option value="1">January</option>
@@ -84,7 +93,20 @@ export default function Filters({ filters, setFilters }) {
               year: e.target.value,
             })
           }
-          className="h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition"
+          className="
+  h-12
+  rounded-md
+  border
+  border-gray-300
+  bg-white
+  px-4
+  text-gray-700
+  focus:border-blue-500
+  focus:ring-2
+  focus:ring-blue-100
+  outline-none
+  transition-colors
+"
         >
           <option value="2026">2026</option>
           <option value="2025">2025</option>
@@ -100,7 +122,20 @@ export default function Filters({ filters, setFilters }) {
               type: e.target.value,
             })
           }
-          className="h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition"
+          className="
+  h-12
+  rounded-md
+  border
+  border-gray-300
+  bg-white
+  px-4
+  text-gray-700
+  focus:border-blue-500
+  focus:ring-2
+  focus:ring-blue-100
+  outline-none
+  transition-colors
+"
         >
           <option value="all">All Types</option>
           <option value="income">Income</option>
@@ -115,20 +150,29 @@ export default function Filters({ filters, setFilters }) {
               category: e.target.value,
             })
           }
-          className="h-12 rounded-xl border border-gray-300 bg-white px-4 text-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition"
+          className="
+  h-12
+  rounded-md
+  border
+  border-gray-300
+  bg-white
+  px-4
+  text-gray-700
+  focus:border-blue-500
+  focus:ring-2
+  focus:ring-blue-100
+  outline-none
+  transition-colors
+"
         >
           <option value="all">All Categories</option>
 
           {categories.map((category) => (
-            <option
-              key={category}
-              value={category}
-            >
+            <option key={category} value={category}>
               {category}
             </option>
           ))}
         </select>
-
       </div>
     </div>
   );

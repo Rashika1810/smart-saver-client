@@ -26,9 +26,8 @@ const months = [
 export default function Analytics() {
   const currentYear = new Date().getFullYear();
 
-  const years = Array.from(
-    { length: 5 },
-    (_, i) => (currentYear - i).toString(),
+  const years = Array.from({ length: 5 }, (_, i) =>
+    (currentYear - i).toString(),
   );
 
   const [analytics, setAnalytics] = useState(null);
@@ -101,9 +100,7 @@ export default function Analytics() {
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-black">
-            Analytics
-          </h1>
+          <h1 className="header-title">Analytics</h1>
 
           <p className="mt-2 max-w-2xl text-gray-400">
             Visualize your income, expenses and spending patterns with detailed
@@ -122,13 +119,23 @@ export default function Analytics() {
                 month: e.target.value,
               })
             }
-            className="rounded-xl border border-gray/10 bg-gray/5 px-4 py-3 text-gray backdrop-blur-xl outline-none transition focus:border-blue-500"
+            className="
+  h-12
+  rounded-md
+  border
+  border-gray-300
+  bg-white
+  px-4
+  text-gray-700
+  outline-none
+  transition-colors
+  focus:border-blue-500
+  focus:ring-2
+  focus:ring-blue-100
+"
           >
             {months.map((month) => (
-              <option
-                key={month.value}
-                value={month.value}
-              >
+              <option key={month.value} value={month.value}>
                 {month.label}
               </option>
             ))}
@@ -142,13 +149,23 @@ export default function Analytics() {
                 year: e.target.value,
               })
             }
-            className="rounded-xl border border-gray/10 bg-gray/5 px-4 py-3 text-gray backdrop-blur-xl outline-none transition focus:border-blue-500"
+            className="
+  h-12
+  rounded-md
+  border
+  border-gray-300
+  bg-white
+  px-4
+  text-gray-700
+  outline-none
+  transition-colors
+  focus:border-blue-500
+  focus:ring-2
+  focus:ring-blue-100
+"
           >
             {years.map((year) => (
-              <option
-                key={year}
-                value={year}
-              >
+              <option key={year} value={year}>
                 {year}
               </option>
             ))}
@@ -158,14 +175,11 @@ export default function Analytics() {
 
       {/* Summary Cards */}
 
-      <SummaryCards
-        summary={analytics.summary}
-        showTransactionCount
-      />
+      <SummaryCards summary={analytics.summary} showTransactionCount />
 
       {/* Chart Card */}
 
-      <div className="rounded-2xl border border-gray/10 bg-gray/5 p-6 backdrop-blur-xl">
+      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="text-2xl font-semibold text-gray">
@@ -189,7 +203,20 @@ export default function Analytics() {
           <select
             value={selectedChart}
             onChange={(e) => setSelectedChart(e.target.value)}
-            className="rounded-xl border border-gray/10 bg-gray/5 px-4 py-3 text-gray backdrop-blur-xl outline-none transition focus:border-blue-500"
+            className="
+  h-12
+  rounded-md
+  border
+  border-gray-300
+  bg-white
+  px-4
+  text-gray-700
+  outline-none
+  transition-colors
+  focus:border-blue-500
+  focus:ring-2
+  focus:ring-blue-100
+"
           >
             <option value="monthly">Monthly Trend</option>
             <option value="category">Category Breakdown</option>

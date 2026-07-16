@@ -31,7 +31,7 @@ export default function AIInsightPopup() {
       setInsight(data.data);
       setCurrentCard(0);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       setError("Unable to generate your financial insight.");
     } finally {
       setLoading(false);
@@ -62,87 +62,74 @@ export default function AIInsightPopup() {
   }, [open]);
 
   const accent = {
-    positive: "bg-green-50 border-green-200",
-    warning: "bg-amber-50 border-amber-200",
-    neutral: "bg-blue-50 border-blue-200",
+    positive: "border-l-4 border-l-green-500",
+    warning: "border-l-4 border-l-amber-500",
+    neutral: "border-l-4 border-l-blue-500",
   };
 
   return (
-    <div className="relative" ref={popupRef}>
-      {/* Button */}
-
+    <div
+      className="relative"
+      ref={popupRef}
+    >
+      {/* Trigger Button */}
       <button
         onClick={handleOpen}
-        className="rounded-xl border border-gray-200 bg-white p-2.5 shadow-sm transition hover:bg-blue-50 hover:border-blue-300"
+        className="flex h-10 w-10 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 hover:text-blue-600"
       >
-        <Lightbulb
-          size={20}
-          className="text-blue-600"
-        />
+        <Lightbulb size={20} />
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-3 w-[360px] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl z-50">
-
+        <div className="absolute right-0 z-50 mt-3 w-[360px] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
           {/* Header */}
-
-          <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-
+          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
             <div>
-
-              <h2 className="font-semibold text-gray-900">
+              <h2 className="text-base font-semibold text-gray-900">
                 AI Finance Insight
               </h2>
 
-              <p className="text-sm text-gray-500">
+              <p className="mt-1 text-sm text-gray-500">
                 Personalized recommendations
               </p>
-
             </div>
 
             <button
               onClick={() => setOpen(false)}
-              className="rounded-lg p-2 hover:bg-gray-100"
+              className="rounded-md p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
             >
               <X size={18} />
             </button>
-
           </div>
 
           {/* Loading */}
-
           {loading && (
             <div className="flex flex-col items-center gap-4 py-12">
-
               <Loader2
                 className="animate-spin text-blue-600"
-                size={30}
+                size={28}
               />
 
               <p className="text-sm text-gray-500">
                 Generating insights...
               </p>
-
             </div>
           )}
 
           {/* Error */}
-
           {!loading && error && (
-            <div className="p-6">
-
-              <p className="text-red-600 text-sm">
+            <div className="p-5">
+              <p className="text-sm text-red-600">
                 {error}
               </p>
 
               <Button
-  variant="info"
-  className="mt-4"
-  onClick={fetchInsight}
->
-  Try Again
-</Button>
-
+                variant="info"
+                className="mt-4"
+                onClick={fetchInsight}
+              >
+                Try Again
+              </Button>
             </div>
           )}
 
@@ -177,57 +164,49 @@ export default function AIInsightPopup() {
 
               return (
                 <>
+                  {/* Insight Card */}
                   <div
-                    className={`m-5 rounded-xl border p-5 ${
-                      accent[insight.type] ||
-                      accent.neutral
+                    className={`m-5 rounded-md border border-gray-200 bg-white p-5 ${
+                      accent[insight.type] || accent.neutral
                     }`}
                   >
-
                     <div className="mb-4 flex items-center gap-3">
-
-                      <div className="rounded-lg bg-white p-2 shadow-sm">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
                         <Icon
-                          size={20}
+                          size={18}
                           className="text-blue-600"
                         />
                       </div>
 
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="text-base font-semibold text-gray-900">
                         {current.title}
                       </h3>
-
                     </div>
 
-                    <p className="leading-7 text-sm text-gray-700">
+                    <p className="text-sm leading-6 text-gray-600">
                       {current.text}
                     </p>
-
                   </div>
 
                   {/* Footer */}
-
-                  <div className="flex items-center justify-between border-t border-gray-100 px-5 py-4">
-
+                  <div className="flex items-center justify-between border-t border-gray-200 px-5 py-4">
                     <button
                       onClick={() =>
-                        setCurrentCard((p) =>
-                          Math.max(0, p - 1)
-                        )
+                        setCurrentCard((p) => Math.max(0, p - 1))
                       }
                       disabled={currentCard === 0}
-                      className="rounded-lg border border-gray-200 p-2 hover:bg-gray-100 disabled:opacity-40"
+                      className="flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       <ChevronLeft size={18} />
                     </button>
 
                     <div className="flex gap-2">
                       {cards.map((_, i) => (
-                        <div
+                        <span
                           key={i}
                           className={`h-2 w-2 rounded-full ${
                             currentCard === i
-                              ? "bg-blue-600"
+                              ? "bg-slate-700"
                               : "bg-gray-300"
                           }`}
                         />
@@ -240,14 +219,11 @@ export default function AIInsightPopup() {
                           Math.min(cards.length - 1, p + 1)
                         )
                       }
-                      disabled={
-                        currentCard === cards.length - 1
-                      }
-                      className="rounded-lg border border-gray-200 p-2 hover:bg-gray-100 disabled:opacity-40"
+                      disabled={currentCard === cards.length - 1}
+                      className="flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       <ChevronRight size={18} />
                     </button>
-
                   </div>
                 </>
               );

@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.header-title {
+  font-size: 2rem;          /* 32px */
+  font-weight: 500;         /* Medium, not too bold */
+  line-height: 1.2;
+  color: #1e293b;           /* slate-800 */
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+}

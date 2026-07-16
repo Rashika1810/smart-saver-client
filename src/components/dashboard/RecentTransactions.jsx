@@ -1,4 +1,4 @@
-import { formatDate } from "../../utils/date";
+import { formatDate } from "./../../utils/date";
 import TransactionTableSkeleton from "./TransactionTableSkeleton";
 
 export default function RecentTransactions({ data, loading }) {

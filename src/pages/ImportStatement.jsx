@@ -34,15 +34,15 @@ export default function ImportStatement() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
+    <div className="max-w-5xl mx-auto px-6 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">
+        <h1 className="header-title">
           Import PhonePe Statement
         </h1>
 
-        <p className="mt-2 text-gray-500">
-          Upload your PhonePe PDF statement. Duplicate
-          transactions will automatically be skipped.
+        <p className="mt-2 text-sm text-slate-500">
+          Upload your PhonePe PDF statement. Duplicate transactions are
+          automatically skipped during import.
         </p>
       </div>
 
@@ -52,58 +52,58 @@ export default function ImportStatement() {
       />
 
       {summary && (
-        <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
-          <h2 className="mb-5 text-xl font-semibold">
+        <div className="mt-8 rounded-lg border border-slate-200 bg-white p-6">
+          <h1 className="header-title">
             Import Summary
-          </h2>
+          </h1>
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-            <div className="rounded-xl bg-slate-100 p-4">
-              <p className="text-sm text-gray-500">
+            <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
+              <p className="text-sm text-slate-500">
                 Total Found
               </p>
 
-              <p className="text-2xl font-bold">
+              <p className="mt-1 text-xl font-semibold text-slate-800">
                 {summary.totalFound}
               </p>
             </div>
 
-            <div className="rounded-xl bg-green-100 p-4">
-              <p className="text-sm text-gray-500">
+            <div className="rounded-md border border-green-100 bg-green-50 p-4">
+              <p className="text-sm text-slate-500">
                 Imported
               </p>
 
-              <p className="text-2xl font-bold text-green-700">
+              <p className="mt-1 text-xl font-semibold text-green-700">
                 {summary.imported}
               </p>
             </div>
 
-            <div className="rounded-xl bg-yellow-100 p-4">
-              <p className="text-sm text-gray-500">
+            <div className="rounded-md border border-yellow-100 bg-yellow-50 p-4">
+              <p className="text-sm text-slate-500">
                 Duplicates
               </p>
 
-              <p className="text-2xl font-bold text-yellow-700">
+              <p className="mt-1 text-xl font-semibold text-yellow-700">
                 {summary.duplicates}
               </p>
             </div>
 
-            <div className="rounded-xl bg-red-100 p-4">
-              <p className="text-sm text-gray-500">
+            <div className="rounded-md border border-red-100 bg-red-50 p-4">
+              <p className="text-sm text-slate-500">
                 Invalid
               </p>
 
-              <p className="text-2xl font-bold text-red-700">
+              <p className="mt-1 text-xl font-semibold text-red-700">
                 {summary.invalid}
               </p>
             </div>
 
-            <div className="rounded-xl bg-blue-100 p-4">
-              <p className="text-sm text-gray-500">
+            <div className="rounded-md border border-blue-100 bg-blue-50 p-4">
+              <p className="text-sm text-slate-500">
                 Valid
               </p>
 
-              <p className="text-2xl font-bold text-blue-700">
+              <p className="mt-1 text-xl font-semibold text-blue-700">
                 {summary.valid}
               </p>
             </div>
