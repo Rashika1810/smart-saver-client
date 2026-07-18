@@ -10,36 +10,38 @@ import {
   ComposedChart,
 } from "recharts";
 
-const formatCurrency = (value) =>
-  `₹${Number(value).toLocaleString("en-IN")}`;
+const formatCurrency = (value) => `₹${Number(value).toLocaleString("en-IN")}`;
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
 
-  return (
-    <div className="min-w-[200px] rounded-2xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl p-4 shadow-2xl">
-      <p className="mb-4 text-sm font-semibold text-white">{label}</p>
+  // Keep only the Line entries (ignore Area entries)
+  const uniquePayload = payload.filter(
+    (entry) => entry.stroke && entry.stroke !== "none",
+  );
 
-      <div className="space-y-3">
-        {payload.map((entry) => (
+  return (
+    <div className="min-w-[190px] rounded-md border border-gray-200 bg-white px-4 py-3 shadow-md">
+      <p className="mb-3 text-sm font-medium text-gray-900">{label}</p>
+
+      <div className="space-y-2">
+        {uniquePayload.map((entry) => (
           <div
             key={entry.dataKey}
             className="flex items-center justify-between"
           >
             <div className="flex items-center gap-2">
               <span
-                className="h-3 w-3 rounded-full"
+                className="h-2.5 w-2.5 rounded-full"
                 style={{
-                  background: entry.color,
+                  backgroundColor: entry.stroke,
                 }}
               />
 
-              <span className="text-sm text-zinc-300">
-                {entry.name}
-              </span>
+              <span className="text-xs text-gray-600">{entry.name}</span>
             </div>
 
-            <span className="font-semibold text-white">
+            <span className="text-sm font-medium text-gray-900">
               {formatCurrency(entry.value)}
             </span>
           </div>
@@ -48,113 +50,81 @@ const CustomTooltip = ({ active, payload, label }) => {
     </div>
   );
 };
-
 export default function MonthlyTrendChart({ data = [] }) {
   if (!data.length) {
     return (
-      <div className="flex h-[430px] flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl">
-        <div className="mb-4 text-6xl">📈</div>
+      <div className="flex h-[420px] flex-col items-center justify-center rounded-md border border-gray-200 bg-gray-50">
+        <div className="text-5xl">📈</div>
 
-        <h3 className="text-2xl font-semibold">
+        <h3 className="mt-3 text-lg font-semibold text-gray-900">
           No Monthly Data
         </h3>
 
-        <p className="mt-3 max-w-sm text-center text-zinc-400">
-          Add more income and expense transactions to
-          visualize your monthly financial trend.
+        <p className="mt-2 max-w-sm text-center text-sm text-gray-500">
+          Add income and expense transactions to visualize monthly trends.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="h-[430px]">
+    <div className="h-[420px]">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           data={data}
           margin={{
-            top: 25,
-            right: 15,
-            left: 10,
-            bottom: 10,
+            top: 12,
+            right: 18,
+            left: 8,
+            bottom: 8,
           }}
         >
           <defs>
-            <linearGradient
-              id="incomeFill"
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="1"
-            >
-              <stop
-                offset="0%"
-                stopColor="#22c55e"
-                stopOpacity={0.35}
-              />
+            <linearGradient id="incomeFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#22C55E" stopOpacity={0.12} />
 
-              <stop
-                offset="100%"
-                stopColor="#22c55e"
-                stopOpacity={0}
-              />
+              <stop offset="100%" stopColor="#22C55E" stopOpacity={0} />
             </linearGradient>
 
-            <linearGradient
-              id="expenseFill"
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="1"
-            >
-              <stop
-                offset="0%"
-                stopColor="#3b82f6"
-                stopOpacity={0.35}
-              />
+            <linearGradient id="expenseFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.12} />
 
-              <stop
-                offset="100%"
-                stopColor="#3b82f6"
-                stopOpacity={0}
-              />
+              <stop offset="100%" stopColor="#3B82F6" stopOpacity={0} />
             </linearGradient>
           </defs>
 
           <CartesianGrid
-            stroke="#27272a"
-            strokeDasharray="3 3"
+            stroke="#E5E7EB"
+            strokeDasharray="4 4"
             vertical={false}
           />
 
           <XAxis
             dataKey="month"
             tick={{
-              fill: "#9ca3af",
+              fill: "#6B7280",
               fontSize: 12,
             }}
-            tickMargin={10}
+            tickMargin={8}
             tickLine={false}
             axisLine={false}
           />
 
           <YAxis
             tick={{
-              fill: "#9ca3af",
+              fill: "#6B7280",
               fontSize: 12,
             }}
-            tickFormatter={(value) =>
-              `₹${(value / 1000).toFixed(0)}k`
-            }
-            tickMargin={10}
+            tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
+            tickMargin={8}
             tickLine={false}
             axisLine={false}
           />
 
           <Tooltip
             cursor={{
-              stroke: "#3b82f6",
-              strokeOpacity: 0.3,
+              stroke: "#CBD5E1",
+              strokeWidth: 1,
             }}
             content={<CustomTooltip />}
           />
@@ -163,61 +133,60 @@ export default function MonthlyTrendChart({ data = [] }) {
             verticalAlign="top"
             align="right"
             iconType="circle"
+            iconSize={8}
             wrapperStyle={{
-              paddingBottom: 20,
-              color: "#d4d4d8",
+              paddingBottom: 14,
+              color: "#374151",
               fontSize: "13px",
             }}
           />
 
           <Area
-            type="monotone"
+            type="natural"
             dataKey="income"
             fill="url(#incomeFill)"
             stroke="none"
+            legendType="none"
+            isAnimationActive={false}
           />
-
           <Area
-            type="monotone"
+            type="natural"
             dataKey="expense"
             fill="url(#expenseFill)"
             stroke="none"
+            legendType="none"
+            isAnimationActive={false}
           />
-
           <Line
-            type="monotone"
+            type="natural"
             dataKey="income"
             name="Income"
-            stroke="#22c55e"
-            strokeWidth={3}
-            dot={{
-              r: 0,
-            }}
+            stroke="#22C55E"
+            strokeWidth={2.25}
+            dot={false}
             activeDot={{
-              r: 7,
+              r: 4,
+              fill: "#22C55E",
               stroke: "#fff",
               strokeWidth: 2,
-              fill: "#22c55e",
             }}
-            animationDuration={1000}
+            animationDuration={500}
           />
 
           <Line
-            type="monotone"
+            type="natural"
             dataKey="expense"
             name="Expense"
-            stroke="#3b82f6"
-            strokeWidth={3}
-            dot={{
-              r: 0,
-            }}
+            stroke="#3B82F6"
+            strokeWidth={2.25}
+            dot={false}
             activeDot={{
-              r: 7,
+              r: 4,
+              fill: "#3B82F6",
               stroke: "#fff",
               strokeWidth: 2,
-              fill: "#3b82f6",
             }}
-            animationDuration={1000}
+            animationDuration={500}
           />
         </ComposedChart>
       </ResponsiveContainer>

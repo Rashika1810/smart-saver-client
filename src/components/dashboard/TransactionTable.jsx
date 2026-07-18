@@ -38,9 +38,7 @@ export default function TransactionTable({
   return (
     <>
       <div className="overflow-hidden rounded-md border border-gray-200 bg-white shadow">
-        <div
-          className="max-h-[560px] overflow-auto transition-opacity duration-300"
-        >
+        <div className="max-h-[560px] overflow-auto transition-opacity duration-300">
           <table className="min-w-full">
             <thead className="sticky top-0 z-10 border-b border-gray-300 bg-gray-100">
               <tr>
@@ -70,64 +68,80 @@ export default function TransactionTable({
               </tr>
             </thead>
 
-            <tbody>
-              {data.map((t, index) => (
-                <tr
-                  key={t._id}
-                  className={`border-b border-gray-200 transition-colors ${
-                    index % 2 === 0
-                      ? "bg-white hover:bg-gray-100"
-                      : "bg-gray-50 hover:bg-gray-100"
-                  }`}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                    {formatDate(t.date)}
-                  </td>
+<tbody>
+  {data.map((t, index) => {
+    const isImported = t.source === "phonepe";
 
-                  <td className="px-6 py-4 text-right font-semibold text-gray-900">
-                    ₹{Number(t.amount).toLocaleString()}
-                  </td>
+    return (
+      <tr
+        key={t._id}
+        className={`border-b border-gray-200 transition-colors ${
+          index % 2 === 0
+            ? "bg-white hover:bg-gray-100"
+            : "bg-gray-50 hover:bg-gray-100"
+        }`}
+      >
+        <td className="px-6 py-4 whitespace-nowrap text-gray-700">
+          {formatDate(t.date)}
+        </td>
 
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex rounded-md px-2.5 py-1 text-xs font-semibold ${
-                        t.type === "income"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {t.type}
-                    </span>
-                  </td>
+        <td className="px-6 py-4 text-right font-semibold text-gray-900">
+          ₹{Number(t.amount).toLocaleString()}
+        </td>
 
-                  <td className="px-6 py-4 capitalize text-gray-700">
-                    {t.category}
-                  </td>
+        <td className="px-6 py-4">
+          <span
+            className={`inline-flex rounded-md px-2.5 py-1 text-xs font-semibold ${
+              t.type === "income"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {t.type}
+          </span>
+        </td>
 
-                  <td className="px-6 py-4 text-gray-500">
-                    {t.description || "—"}
-                  </td>
+        <td className="px-6 py-4 capitalize text-gray-700">
+          {t.category}
+        </td>
 
-                  <td className="px-6 py-4">
-                    <div className="flex justify-center gap-2">
-                      <Button
-                        variant="secondary"
-                        onClick={() => handleEdit(t._id)}
-                      >
-                        Edit
-                      </Button>
+        <td className="px-6 py-4 text-gray-500">
+          {t.description || "—"}
+        </td>
 
-                      <Button
-                        variant="danger"
-                        onClick={() => setDeleteId(t._id)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+        <td className="px-6 py-4">
+          <div className="flex justify-center gap-2">
+            <Button
+              variant="secondary"
+              disabled={isImported}
+              title={
+                isImported
+                  ? "Imported PhonePe transactions cannot be edited."
+                  : ""
+              }
+              onClick={() => handleEdit(t._id)}
+            >
+              Edit
+            </Button>
+
+            <Button
+              variant="danger"
+              disabled={isImported}
+              title={
+                isImported
+                  ? "Imported PhonePe transactions cannot be deleted."
+                  : ""
+              }
+              onClick={() => setDeleteId(t._id)}
+            >
+              Delete
+            </Button>
+          </div>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
           </table>
         </div>
 

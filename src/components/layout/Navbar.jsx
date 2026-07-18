@@ -56,6 +56,9 @@ export default function Navbar() {
               Dashboard
             </NavLink>
 
+            <NavLink to="/about" className={navClass}>
+              About
+            </NavLink>
             <NavLink to="/transactions" className={navClass}>
               Transactions
             </NavLink>
@@ -106,6 +109,9 @@ export default function Navbar() {
               Dashboard
             </NavLink>
 
+            <NavLink to="/about" className={navClass}>
+              About
+            </NavLink>
             <NavLink to="/transactions" className={navClass}>
               Transactions
             </NavLink>

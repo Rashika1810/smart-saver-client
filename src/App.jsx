@@ -12,6 +12,7 @@ import Analytics from "./pages/Analytics";
 import Transactions from "./pages/Transactions";
 import ImportStatement from "./pages/ImportStatement";
 import AuthPage from "./pages/auth/AuthPage";
+import About from "./pages/About";
 
 function App() {
   return (
@@ -31,6 +32,9 @@ function App() {
           <Route path="/edit-transaction/:id" element={<EditTransaction />} />
           <Route path="/recurring" element={<RecurringTransactions />} />
           <Route path="/import-statement" element={<ImportStatement />} />
+          <Route path="/about" element={<About />} />
+          
+
         </Route>
 
         {/* 404 Page */}

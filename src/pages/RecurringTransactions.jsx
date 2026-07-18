@@ -48,7 +48,7 @@ export default function RecurringTransactions() {
         <div>
           <h1 className="header-title">Recurring Transactions</h1>
 
-          <p className="mt-2 max-w-2xl text-gray-500">
+          <p className="mt-2 text-sm max-w-2xl text-gray-500">
             Manage subscriptions, salaries, rent, and other recurring payments
             from one place.
           </p>
@@ -85,7 +85,7 @@ export default function RecurringTransactions() {
               No Recurring Transactions
             </h2>
 
-            <p className="mt-3 max-w-lg text-gray-500">
+            <p className="mt-3 max-w-lg text-gray-500 text-base">
               Create recurring transactions to automatically track
               subscriptions, salaries, rent, EMIs, and other regular payments.
             </p>

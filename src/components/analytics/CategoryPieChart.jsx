@@ -8,14 +8,14 @@ import {
 } from "recharts";
 
 const COLORS = [
-  "#3B82F6",
-  "#22C55E",
-  "#F59E0B",
-  "#8B5CF6",
-  "#06B6D4",
-  "#EC4899",
-  "#EF4444",
-  "#84CC16",
+  "#60A5FA",
+  "#4ADE80",
+  "#FBBF24",
+  "#A78BFA",
+  "#67E8F9",
+  "#F472B6",
+  "#F87171",
+  "#A3E635",
 ];
 
 const formatCurrency = (value) =>
@@ -27,24 +27,22 @@ const CustomTooltip = ({ active, payload }) => {
   const item = payload[0].payload;
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#111827]/95 backdrop-blur-xl px-5 py-4 shadow-2xl">
-      <h4 className="font-semibold capitalize text-white">
+    <div className="rounded-md border border-gray-700 bg-white px-4 py-3 shadow-lg">
+      <h4 className="text-sm font-medium text-gray-900 capitalize">
         {item.category}
       </h4>
 
-      <div className="mt-3 space-y-2 text-sm">
-        <div className="flex items-center justify-between gap-8">
+      <div className="mt-2 space-y-1 text-xs">
+        <div className="flex justify-between gap-6">
           <span className="text-gray-400">Amount</span>
-
-          <span className="font-semibold text-white">
+          <span className="font-medium text-gray-900">
             {formatCurrency(item.amount)}
           </span>
         </div>
 
-        <div className="flex items-center justify-between gap-8">
+        <div className="flex justify-between gap-6">
           <span className="text-gray-400">Share</span>
-
-          <span className="font-semibold text-blue-400">
+          <span className="font-medium text-blue-400">
             {item.percent.toFixed(1)}%
           </span>
         </div>
@@ -56,16 +54,9 @@ const CustomTooltip = ({ active, payload }) => {
 export default function CategoryPieChart({ data = [] }) {
   if (!data.length) {
     return (
-      <div className="flex h-[380px] flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
-        <div className="text-6xl">📊</div>
-
-        <h3 className="mt-5 text-2xl font-semibold text-white">
-          No Category Data
-        </h3>
-
-        <p className="mt-2 max-w-sm text-center text-gray-400">
-          Once you add expense transactions, you'll see a visual
-          breakdown of your spending by category.
+      <div className="flex h-[420px] items-center justify-center rounded-md border border-white/10 bg-white/5">
+        <p className="text-sm text-gray-400">
+          No expense data available.
         </p>
       </div>
     );
@@ -73,81 +64,75 @@ export default function CategoryPieChart({ data = [] }) {
 
   const total = data.reduce(
     (sum, item) => sum + Number(item.amount),
-    0,
+    0
   );
 
   const chartData = data.map((item) => ({
     ...item,
-    percent: (item.amount / total) * 100,
+    amount: Number(item.amount),
+    percent:
+      total > 0 ? (Number(item.amount) / total) * 100 : 0,
   }));
 
   return (
-    <div className="h-[420px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={chartData}
-            dataKey="amount"
-            nameKey="category"
-            cx="38%"
-            cy="50%"
-            innerRadius={78}
-            outerRadius={118}
-            paddingAngle={3}
-            stroke="rgba(255,255,255,.08)"
-            strokeWidth={2}
-            animationDuration={900}
-          >
-            {chartData.map((entry, index) => (
-              <Cell
-                key={entry.category}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
+    <div className="h-[430px] rounded-md">
 
-          <Tooltip content={<CustomTooltip />} />
+      {/* Summary */}
+      <div className="mb-4 text-center">
+        <p className="text-xs uppercase tracking-wide text-gray-500">
+          Total Spent
+        </p>
 
-          <Legend
-            layout="vertical"
-            align="right"
-            verticalAlign="middle"
-            iconType="circle"
-            iconSize={12}
-            wrapperStyle={{
-              color: "#d1d5db",
-              fontSize: "14px",
-              lineHeight: "30px",
-            }}
-            formatter={(value) => (
-              <span className="capitalize text-gray-300">
-                {value}
-              </span>
-            )}
-          />
+        <h2 className="mt-1 text-2xl font-semibold text-gray-900">
+          {formatCurrency(total)}
+        </h2>
+      </div>
 
-          <text
-            x="38%"
-            y="47%"
-            textAnchor="middle"
-            fill="#9CA3AF"
-            fontSize="13"
-          >
-            Total Spent
-          </text>
+      <div className="h-[340px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={chartData}
+              dataKey="amount"
+              nameKey="category"
+              cx="35%"
+              cy="50%"
+              innerRadius={70}
+              outerRadius={108}
+              paddingAngle={2}
+              stroke="#fff"
+              strokeWidth={1}
+            >
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`${entry.category}-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
 
-          <text
-            x="38%"
-            y="55%"
-            textAnchor="middle"
-            fill="#FFFFFF"
-            fontSize="22"
-            fontWeight="700"
-          >
-            {formatCurrency(total)}
-          </text>
-        </PieChart>
-      </ResponsiveContainer>
+            <Tooltip content={<CustomTooltip />} />
+
+            <Legend
+              layout="vertical"
+              align="right"
+              verticalAlign="middle"
+              iconType="circle"
+              iconSize={9}
+              wrapperStyle={{
+                fontSize: "13px",
+                lineHeight: "24px",
+                color: "#374151",
+              }}
+              formatter={(value) => (
+                <span className="text-sm text-gray-700 capitalize">
+                  {value}
+                </span>
+              )}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

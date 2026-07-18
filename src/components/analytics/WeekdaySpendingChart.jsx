@@ -10,13 +10,13 @@ import {
 } from "recharts";
 
 const COLORS = [
+  "#60A5FA",
   "#3B82F6",
   "#2563EB",
   "#1D4ED8",
   "#0EA5E9",
-  "#06B6D4",
-  "#3B82F6",
-  "#2563EB",
+  "#38BDF8",
+  "#7DD3FC",
 ];
 
 const formatCurrency = (value) =>
@@ -26,17 +26,17 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="min-w-[190px] rounded-2xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl p-4 shadow-2xl">
-      <p className="mb-3 font-semibold text-white">
+    <div className="min-w-[180px] rounded-md border border-gray-200 bg-white px-4 py-3 shadow-md">
+      <p className="mb-2 text-sm font-medium text-gray-900">
         {label}
       </p>
 
       <div className="flex items-center justify-between">
-        <span className="text-sm text-zinc-400">
+        <span className="text-sm text-gray-600">
           Total Spending
         </span>
 
-        <span className="font-semibold text-white">
+        <span className="text-sm font-semibold text-gray-900">
           {formatCurrency(payload[0].value)}
         </span>
       </div>
@@ -47,79 +47,78 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function WeekdaySpendingChart({ data = [] }) {
   if (!data.length) {
     return (
-      <div className="flex h-[430px] flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl">
-        <div className="mb-4 text-6xl">📅</div>
+      <div className="flex h-[420px] flex-col items-center justify-center rounded-md border border-gray-200 bg-gray-50">
+        <div className="text-5xl">📅</div>
 
-        <h3 className="text-2xl font-semibold">
+        <h3 className="mt-3 text-lg font-semibold text-gray-900">
           No Weekday Data
         </h3>
 
-        <p className="mt-3 max-w-sm text-center text-zinc-400">
-          Add more expense transactions to discover your
-          weekday spending habits.
+        <p className="mt-2 max-w-sm text-center text-sm text-gray-500">
+          Add expense transactions to discover your weekday spending habits.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="h-[430px]">
+    <div className="h-[420px]">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
           margin={{
-            top: 20,
-            right: 20,
-            left: 10,
-            bottom: 10,
+            top: 12,
+            right: 16,
+            left: 8,
+            bottom: 8,
           }}
         >
           <CartesianGrid
-            stroke="#27272a"
-            strokeDasharray="3 3"
+            stroke="#E5E7EB"
+            strokeDasharray="4 4"
             vertical={false}
           />
 
           <XAxis
             dataKey="day"
             tick={{
-              fill: "#9ca3af",
+              fill: "#6B7280",
               fontSize: 12,
             }}
-            tickMargin={10}
+            tickMargin={8}
             tickLine={false}
             axisLine={false}
           />
 
           <YAxis
             tick={{
-              fill: "#9ca3af",
+              fill: "#6B7280",
               fontSize: 12,
             }}
             tickFormatter={(value) =>
               `₹${(value / 1000).toFixed(0)}k`
             }
-            tickMargin={10}
+            tickMargin={8}
             tickLine={false}
             axisLine={false}
           />
 
           <Tooltip
             cursor={{
-              fill: "rgba(59,130,246,0.08)",
+              fill: "rgba(59,130,246,0.06)",
             }}
             content={<CustomTooltip />}
           />
 
           <Bar
             dataKey="amount"
-            radius={[12, 12, 0, 0]}
-            maxBarSize={42}
-            animationDuration={900}
+            radius={[4, 4, 0, 0]}
+            maxBarSize={36}
+            animationDuration={500}
           >
             {data.map((entry, index) => (
               <Cell
-                key={index}
+                key={entry.day ?? index}
                 fill={COLORS[index % COLORS.length]}
               />
             ))}
