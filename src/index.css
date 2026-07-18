@@ -1,7 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply font-sans;
+  }
+}
 .header-title {
   font-size: 2rem;          /* 32px */
   font-weight: 500;         /* Medium, not too bold */

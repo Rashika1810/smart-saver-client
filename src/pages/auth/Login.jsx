@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Button from "../../components/ui/Button";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const [input, setInput] = useState({
     email: "",
@@ -40,140 +42,84 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) navigate("/");
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
   }, [navigate]);
 
   return (
-    <div className="grid min-h-screen bg-slate-50 lg:grid-cols-2">
-      {/* Left Section */}
-      <div className="hidden items-center border-r border-blue-100 bg-blue-50 lg:flex">
-        <div className="mx-auto max-w-lg px-12">
-          <h1 className="mt-8 text-5xl font-semibold leading-tight text-gray-900">
-            Expense Tracker
-          </h1>
+    <>
+      <div className="mb-8">
+        <h1 className="text-3xl font-semibold text-gray-900">Welcome back</h1>
 
-          <p className="mt-5 text-base leading-8 text-gray-600">
-            A smarter way to manage your money, track spending and understand
-            your financial habits.
-          </p>
-
-          <div className="mt-12 space-y-5">
-            <div className="flex items-start gap-4 rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
-                💰
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-900">
-                  Track Expenses
-                </h3>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  Record every expense and income in seconds.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
-                📊
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-900">
-                  AI Insights
-                </h3>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  Understand your spending with intelligent analysis.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
-                📈
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-900">
-                  Reports
-                </h3>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  View monthly summaries and financial trends.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <p className="mt-2 text-gray-500">
+          Sign in to your account to continue.
+        </p>
       </div>
 
-      {/* Right Section */}
-      <div className="flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-          <div className="mb-8 text-center">
-            <h2 className="text-3xl font-semibold text-gray-900">
-              Welcome Back 👋
-            </h2>
+      <div className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              Email
+            </label>
 
-            <p className="mt-2 text-gray-500">
-              Sign in to continue managing your finances.
-            </p>
+            <input
+              type="email"
+              name="email"
+              value={input.email}
+              onChange={handleChange}
+              placeholder="you@example.com"
+              className="w-full rounded-md border border-gray-300 px-4 py-2 transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Email Address
-              </label>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              Password
+            </label>
 
+            <div className="relative">
               <input
-                type="email"
-                name="email"
-                value={input.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Password
-              </label>
-
-              <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={input.password}
                 onChange={handleChange}
-                placeholder="Enter your password"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter password"
+                className="w-full rounded-md border border-gray-300 px-4 py-2 pr-12 transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </button>
             </div>
+          </div>
 
-            <Button
-              type="submit"
-              variant="info"
-              className="w-full"
-            >
-              Sign In
-            </Button>
-          </form>
+          <Button
+            type="submit"
+            variant="info"
+            className="w-full rounded-md py-3"
+          >
+            Sign In
+          </Button>
+        </form>
 
-          <p className="mt-6 border-t border-gray-200 pt-5 text-center text-gray-500">
-            Don't have an account?{" "}
-            <Link
-              to="/register"
-              className="font-semibold text-blue-600 hover:text-blue-700"
-            >
-              Create Account
-            </Link>
-          </p>
+        <div className="mt-6 border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
+          Don't have an account?{" "}
+          <Link
+            to="/auth/register"
+            className="font-medium text-blue-600 hover:text-blue-700"
+          >
+            Create Account
+          </Link>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

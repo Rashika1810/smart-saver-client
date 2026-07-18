@@ -2,8 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Dashboard from "./pages/Dashboard";
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
 import RecurringTransactions from "./pages/RecurringTransactions";
 import AddTransaction from "./components/transactions/AddTransaction";
 import EditTransaction from "./components/transactions/EditTransaction";
@@ -13,6 +11,7 @@ import HomeLayout from "./components/layout/HomeLayout";
 import Analytics from "./pages/Analytics";
 import Transactions from "./pages/Transactions";
 import ImportStatement from "./pages/ImportStatement";
+import AuthPage from "./pages/auth/AuthPage";
 
 function App() {
   return (
@@ -20,8 +19,7 @@ function App() {
       <Routes>
         {/* Authentication Pages */}
         <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/auth/:mode" element={<AuthPage />} />
         </Route>
 
         {/* Protected Pages */}
