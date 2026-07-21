@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import AIInsightPopup from "../components/dashboard/AIInsightPopup";
 import OpeningBalanceModal from "../components/common/OpeningBalanceModal";
 import Button from "../components/ui/Button";
+import ChatbotButton from "../components/chatbot/ChatbotButton";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -183,6 +184,7 @@ export default function Dashboard() {
         onCancel={() => setShowOpeningBalanceModal(false)}
         onSave={handleOpeningBalance}
       />
+      <ChatbotButton />
     </div>
   );
 }
