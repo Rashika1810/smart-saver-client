@@ -14,6 +14,7 @@ export default function ChatWindow({ isOpen, onClose, onSend, loading }) {
   ]);
 
   const [input, setInput] = useState("");
+  const [suggestionsCollapsed, setSuggestionsCollapsed] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
 
@@ -33,9 +34,11 @@ export default function ChatWindow({ isOpen, onClose, onSend, loading }) {
   useEffect(() => {
     if (isOpen) {
       const shuffled = [...QUESTION_POOL].sort(() => Math.random() - 0.5);
+
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSuggestions(shuffled.slice(0, 4));
       setShowSuggestions(true);
+      setSuggestionsCollapsed(false);
     }
   }, [isOpen]);
 
@@ -77,8 +80,35 @@ export default function ChatWindow({ isOpen, onClose, onSend, loading }) {
   };
 
   return (
-    <div className="fixed bottom-24 right-6 z-50">
-      <div className="w-[380px] h-[520px] bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden flex flex-col">
+    <div
+      className="
+      fixed
+      inset-x-3
+      bottom-20
+      top-16
+      z-50
+      sm:inset-auto
+      sm:bottom-24
+      sm:right-6
+    "
+    >
+      <div
+        className="
+        flex
+        h-full
+        w-full
+        flex-col
+        overflow-hidden
+        rounded-xl
+        border
+        border-gray-200
+        bg-white
+        shadow-xl
+
+        sm:h-[520px]
+        sm:w-[380px]
+      "
+      >
         {/* Header */}
 
         <div className="flex items-center justify-between px-4 py-3 border-b bg-blue-600 text-white">
@@ -107,15 +137,26 @@ export default function ChatWindow({ isOpen, onClose, onSend, loading }) {
         {/* Suggested Questions */}
 
         {showSuggestions && (
-          <div className="px-4 py-3 border-b bg-white">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">
-              Suggested Questions
-            </p>
+          <div className="border-b bg-white px-4 py-3">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                Suggested Questions
+              </p>
 
-            <SuggestedQuestions
-              questions={suggestions}
-              onSelect={sendMessage}
-            />
+              <button
+                onClick={() => setSuggestionsCollapsed((prev) => !prev)}
+                className="text-xs font-medium text-blue-600 hover:text-blue-700"
+              >
+                {suggestionsCollapsed ? "Show" : "Hide"}
+              </button>
+            </div>
+
+            {!suggestionsCollapsed && (
+              <SuggestedQuestions
+                questions={suggestions}
+                onSelect={sendMessage}
+              />
+            )}
           </div>
         )}
 

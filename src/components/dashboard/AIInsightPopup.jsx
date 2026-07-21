@@ -57,8 +57,7 @@ export default function AIInsightPopup() {
       document.addEventListener("mousedown", handleOutside);
     }
 
-    return () =>
-      document.removeEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
   }, [open]);
 
   const accent = {
@@ -68,22 +67,36 @@ export default function AIInsightPopup() {
   };
 
   return (
-    <div
-      className="relative"
-      ref={popupRef}
-    >
+    <div className="relative" ref={popupRef}>
       {/* Trigger Button */}
       <button
         onClick={handleOpen}
-        className="flex h-10 w-10 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 hover:text-blue-600"
+        className="flex h-10 w-10 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 hover:text-blue-600 sm:h-11 sm:w-11"
       >
-        <Lightbulb size={20} />
+        <Lightbulb className="h-5 w-5" />
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-3 w-[360px] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+        <div
+          className="
+    absolute
+    left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0
+    z-50
+    mt-3
+    w-[calc(100vw-2rem)]
+    max-w-[360px]
+    overflow-hidden
+    rounded-lg
+    border
+    border-gray-200
+    bg-white
+    shadow-lg
+
+    sm:w-[360px]
+  "
+        >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+          <div className="flex items-start justify-between gap-3 border-b border-gray-200 px-4 py-4 sm:px-5">
             <div>
               <h2 className="text-base font-semibold text-gray-900">
                 AI Finance Insight
@@ -105,29 +118,18 @@ export default function AIInsightPopup() {
           {/* Loading */}
           {loading && (
             <div className="flex flex-col items-center gap-4 py-12">
-              <Loader2
-                className="animate-spin text-blue-600"
-                size={28}
-              />
+              <Loader2 className="animate-spin text-blue-600" size={28} />
 
-              <p className="text-sm text-gray-500">
-                Generating insights...
-              </p>
+              <p className="text-sm text-gray-500">Generating insights...</p>
             </div>
           )}
 
           {/* Error */}
           {!loading && error && (
             <div className="p-5">
-              <p className="text-sm text-red-600">
-                {error}
-              </p>
+              <p className="text-sm text-red-600">{error}</p>
 
-              <Button
-                variant="info"
-                className="mt-4"
-                onClick={fetchInsight}
-              >
+              <Button variant="info" className="mt-4" onClick={fetchInsight}>
                 Try Again
               </Button>
             </div>
@@ -166,16 +168,13 @@ export default function AIInsightPopup() {
                 <>
                   {/* Insight Card */}
                   <div
-                    className={`m-5 rounded-md border border-gray-200 bg-white p-5 ${
+                    className={`m-4 rounded-md border border-gray-200 bg-white p-4 sm:m-5 sm:p-5 ${
                       accent[insight.type] || accent.neutral
                     }`}
                   >
                     <div className="mb-4 flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
-                        <Icon
-                          size={18}
-                          className="text-blue-600"
-                        />
+                        <Icon size={18} className="text-blue-600" />
                       </div>
 
                       <h3 className="text-base font-semibold text-gray-900">
@@ -191,9 +190,7 @@ export default function AIInsightPopup() {
                   {/* Footer */}
                   <div className="flex items-center justify-between border-t border-gray-200 px-5 py-4">
                     <button
-                      onClick={() =>
-                        setCurrentCard((p) => Math.max(0, p - 1))
-                      }
+                      onClick={() => setCurrentCard((p) => Math.max(0, p - 1))}
                       disabled={currentCard === 0}
                       className="flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
                     >
@@ -205,9 +202,7 @@ export default function AIInsightPopup() {
                         <span
                           key={i}
                           className={`h-2 w-2 rounded-full ${
-                            currentCard === i
-                              ? "bg-slate-700"
-                              : "bg-gray-300"
+                            currentCard === i ? "bg-slate-700" : "bg-gray-300"
                           }`}
                         />
                       ))}
@@ -215,9 +210,7 @@ export default function AIInsightPopup() {
 
                     <button
                       onClick={() =>
-                        setCurrentCard((p) =>
-                          Math.min(cards.length - 1, p + 1)
-                        )
+                        setCurrentCard((p) => Math.min(cards.length - 1, p + 1))
                       }
                       disabled={currentCard === cards.length - 1}
                       className="flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -19,22 +20,17 @@ const COLORS = [
   "#7DD3FC",
 ];
 
-const formatCurrency = (value) =>
-  `₹${Number(value).toLocaleString("en-IN")}`;
+const formatCurrency = (value) => `₹${Number(value).toLocaleString("en-IN")}`;
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="min-w-[180px] rounded-md border border-gray-200 bg-white px-4 py-3 shadow-md">
-      <p className="mb-2 text-sm font-medium text-gray-900">
-        {label}
-      </p>
+    <div className="min-w-[170px] rounded-md border border-gray-200 bg-white px-4 py-3 shadow-lg">
+      <p className="mb-2 text-sm font-medium text-gray-900">{label}</p>
 
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-600">
-          Total Spending
-        </span>
+        <span className="text-sm text-gray-500">Total Spending</span>
 
         <span className="text-sm font-semibold text-gray-900">
           {formatCurrency(payload[0].value)}
@@ -45,16 +41,30 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function WeekdaySpendingChart({ data = [] }) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   if (!data.length) {
     return (
-      <div className="flex h-[420px] flex-col items-center justify-center rounded-md border border-gray-200 bg-gray-50">
+      <div className="flex h-72 flex-col items-center justify-center rounded-md border border-gray-200 bg-gray-50">
         <div className="text-5xl">📅</div>
 
         <h3 className="mt-3 text-lg font-semibold text-gray-900">
           No Weekday Data
         </h3>
 
-        <p className="mt-2 max-w-sm text-center text-sm text-gray-500">
+        <p className="mt-2 max-w-sm text-center text-sm text-gray-500 px-4">
           Add expense transactions to discover your weekday spending habits.
         </p>
       </div>
@@ -62,14 +72,14 @@ export default function WeekdaySpendingChart({ data = [] }) {
   }
 
   return (
-    <div className="h-[420px]">
+    <div className="h-[300px] sm:h-[360px] lg:h-[420px]">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
           margin={{
             top: 12,
-            right: 16,
-            left: 8,
+            right: isMobile ? 8 : 16,
+            left: isMobile ? 0 : 8,
             bottom: 8,
           }}
         >
@@ -83,7 +93,7 @@ export default function WeekdaySpendingChart({ data = [] }) {
             dataKey="day"
             tick={{
               fill: "#6B7280",
-              fontSize: 12,
+              fontSize: isMobile ? 10 : 12,
             }}
             tickMargin={8}
             tickLine={false}
@@ -91,14 +101,15 @@ export default function WeekdaySpendingChart({ data = [] }) {
           />
 
           <YAxis
+            width={isMobile ? 35 : 50}
             tick={{
               fill: "#6B7280",
-              fontSize: 12,
+              fontSize: isMobile ? 10 : 12,
             }}
             tickFormatter={(value) =>
-              `₹${(value / 1000).toFixed(0)}k`
+              value >= 1000 ? `₹${(value / 1000).toFixed(0)}k` : `₹${value}`
             }
-            tickMargin={8}
+            tickMargin={6}
             tickLine={false}
             axisLine={false}
           />
@@ -113,7 +124,7 @@ export default function WeekdaySpendingChart({ data = [] }) {
           <Bar
             dataKey="amount"
             radius={[4, 4, 0, 0]}
-            maxBarSize={36}
+            maxBarSize={isMobile ? 24 : 36}
             animationDuration={500}
           >
             {data.map((entry, index) => (

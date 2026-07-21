@@ -68,90 +68,93 @@ export default function TransactionTable({
               </tr>
             </thead>
 
-<tbody>
-  {data.map((t, index) => {
-    const isImported = t.source === "phonepe";
+            <tbody>
+              {data.map((t, index) => {
+                const isImported = t.source === "phonepe";
 
-    return (
-      <tr
-        key={t._id}
-        className={`border-b border-gray-200 transition-colors ${
-          index % 2 === 0
-            ? "bg-white hover:bg-gray-100"
-            : "bg-gray-50 hover:bg-gray-100"
-        }`}
-      >
-        <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-          {formatDate(t.date)}
-        </td>
+                return (
+                  <tr
+                    key={t._id}
+                    className={`border-b border-gray-200 transition-colors ${
+                      index % 2 === 0
+                        ? "bg-white hover:bg-gray-100"
+                        : "bg-gray-50 hover:bg-gray-100"
+                    }`}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-700">
+                      {formatDate(t.date)}
+                    </td>
 
-        <td className="px-6 py-4 text-right font-semibold text-gray-900">
-          ₹{Number(t.amount).toLocaleString()}
-        </td>
+                    <td className="px-6 py-4 text-right font-semibold text-gray-900">
+                      ₹{Number(t.amount).toLocaleString()}
+                    </td>
 
-        <td className="px-6 py-4">
-          <span
-            className={`inline-flex rounded-md px-2.5 py-1 text-xs font-semibold ${
-              t.type === "income"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {t.type}
-          </span>
-        </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex rounded-md px-2.5 py-1 text-xs font-semibold ${
+                          t.type === "income"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {t.type}
+                      </span>
+                    </td>
 
-        <td className="px-6 py-4 capitalize text-gray-700">
-          {t.category}
-        </td>
+                    <td className="px-6 py-4 capitalize text-gray-700">
+                      {t.category}
+                    </td>
 
-        <td className="px-6 py-4 text-gray-500">
-          {t.description || "—"}
-        </td>
+                    <td className="px-6 py-4 text-gray-500">
+                      {t.description || "—"}
+                    </td>
 
-        <td className="px-6 py-4">
-          <div className="flex justify-center gap-2">
-            <Button
-              variant="secondary"
-              disabled={isImported}
-              title={
-                isImported
-                  ? "Imported PhonePe transactions cannot be edited."
-                  : ""
-              }
-              onClick={() => handleEdit(t._id)}
-            >
-              Edit
-            </Button>
+                    <td className="px-6 py-4">
+                      <div className="flex justify-center gap-2">
+                        <Button
+                          variant="secondary"
+                          disabled={isImported}
+                          title={
+                            isImported
+                              ? "Imported PhonePe transactions cannot be edited."
+                              : ""
+                          }
+                          onClick={() => handleEdit(t._id)}
+                        >
+                          Edit
+                        </Button>
 
-            <Button
-              variant="danger"
-              disabled={isImported}
-              title={
-                isImported
-                  ? "Imported PhonePe transactions cannot be deleted."
-                  : ""
-              }
-              onClick={() => setDeleteId(t._id)}
-            >
-              Delete
-            </Button>
-          </div>
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
+                        <Button
+                          variant="danger"
+                          disabled={isImported}
+                          title={
+                            isImported
+                              ? "Imported PhonePe transactions cannot be deleted."
+                              : ""
+                          }
+                          onClick={() => setDeleteId(t._id)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
           </table>
         </div>
 
-        <div className="flex items-center justify-between border-t border-gray-300 bg-gray-100 px-6 py-4">
+        <div className="flex items-center justify-between border-t border-gray-300 bg-gray-100 px-4 py-4 sm:px-6">
           <Button
             variant="secondary"
             disabled={page === 1 || pageLoading}
             onClick={() => setPage(page - 1)}
           >
-            ← Previous
+            <>
+              <span className="sm:hidden">←</span>
+              <span className="hidden sm:inline">← Previous</span>
+            </>
           </Button>
 
           <div className="text-sm text-gray-500">
@@ -167,7 +170,10 @@ export default function TransactionTable({
             disabled={page === pagination.pages || pageLoading}
             onClick={() => setPage(page + 1)}
           >
-            Next →
+            <>
+              <span className="sm:hidden">→</span>
+              <span className="hidden sm:inline">Next →</span>
+            </>
           </Button>
         </div>
       </div>

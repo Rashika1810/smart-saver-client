@@ -29,6 +29,11 @@ export default function About() {
             transactions, visualize spending, and receive AI-powered financial
             insights—all in one place.
           </p>
+          <div className="mt-8">
+            <Button variant="info" onClick={() => navigate("/")}>
+              Start Using SmartSaver
+            </Button>
+          </div>
         </section>
 
         {/* Intro */}
@@ -211,7 +216,9 @@ export default function About() {
         {/* AI Section */}
         <section className="bg-gradient-to-r from-gray-300 to-gray-300 rounded-md text-white p-8 mb-12">
           <div className="max-w-4xl">
-            <h2 className="text-2xl font-semibold text-gray-900">💡 AI-Powered Financial Assistant</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              💡 AI-Powered Financial Assistant
+            </h2>
 
             <p className="mt-5 text-gray-500 text-base leading-8">
               SmartSaver doesn't just store your transactions—it understands
@@ -233,12 +240,6 @@ export default function About() {
             Everything you need to manage your personal finances in one simple
             and intelligent platform.
           </p>
-
-          <div className="mt-8">
-            <Button variant="info" onClick={() => navigate("/")}>
-              Start Using SmartSaver
-            </Button>
-          </div>
         </section>
       </div>
     </div>

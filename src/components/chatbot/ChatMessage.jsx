@@ -1,19 +1,35 @@
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Bot, User } from "lucide-react";
+import { Bot } from "lucide-react";
 
 export default function ChatMessage({ message }) {
   const mine = message.role === "user";
 
+  const [userInitial, setUserInitial] = useState("U");
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+
+      if (user?.name) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setUserInitial(user.name.charAt(0).toUpperCase());
+      }
+    }
+  }, []);
+
   return (
     <div
-      className={`flex items-start gap-3 mb-4 ${
+      className={`mb-4 flex items-start gap-3 ${
         mine ? "justify-end" : "justify-start"
       }`}
     >
       {/* Assistant Avatar */}
       {!mine && (
-        <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0">
+        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white">
           <Bot size={16} />
         </div>
       )}
@@ -22,8 +38,8 @@ export default function ChatMessage({ message }) {
       <div
         className={`max-w-[78%] rounded-xl px-4 py-3 text-sm leading-6 ${
           mine
-            ? "bg-blue-600 text-white rounded-br-md"
-            : "bg-white border border-gray-200 text-gray-800 rounded-bl-md"
+            ? "rounded-br-md bg-blue-600 text-white"
+            : "rounded-bl-md border border-gray-200 bg-white text-gray-800"
         }`}
       >
         {mine ? (
@@ -40,10 +56,10 @@ export default function ChatMessage({ message }) {
               prose-headings:mb-2
               prose-headings:font-semibold
               prose-strong:text-gray-900
+              prose-code:rounded
               prose-code:bg-gray-100
               prose-code:px-1
               prose-code:py-0.5
-              prose-code:rounded
               prose-pre:bg-gray-900
               prose-pre:text-gray-100
               prose-a:text-blue-600
@@ -62,8 +78,8 @@ export default function ChatMessage({ message }) {
 
       {/* User Avatar */}
       {mine && (
-        <div className="w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center flex-shrink-0">
-          <User size={16} />
+        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-800 text-sm font-semibold text-white">
+          {userInitial}
         </div>
       )}
     </div>
