@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import Button from "../../components/ui/Button";
 import { FaEye, FaEyeSlash, FaInfoCircle } from "react-icons/fa";
+import Loader from "../../components/ui/Loader";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setInput((prev) => ({
@@ -30,31 +32,34 @@ const Register = () => {
     return regex.test(password);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!validatePassword(input.password)) {
-      setError(
-        "Password must be at least 8 characters and include uppercase, lowercase, number and special character.",
-      );
-      return;
+  if (!validatePassword(input.password)) {
+    setError(
+      "Password must be at least 8 characters and include uppercase, lowercase, number and special character.",
+    );
+    return;
+  }
+
+  setError("");
+  setLoading(true);
+
+  try {
+    const { data } = await api.post("/auth/register", input);
+
+    if (data.success) {
+      toast.success(data.message);
+      navigate("/login");
+    } else {
+      toast.error(data?.message || "Registration failed");
     }
-
-    setError("");
-
-    try {
-      const { data } = await api.post("/auth/register", input);
-
-      if (data.success) {
-        toast.success(data.message);
-        navigate("/login");
-      } else {
-        toast.error(data?.message || "Registration failed");
-      }
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Server error");
-    }
-  };
+  } catch (err) {
+    toast.error(err?.response?.data?.message || "Server error");
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -63,6 +68,7 @@ const Register = () => {
   }, [navigate]);
   return (
     <>
+     {loading && <Loader />}
       <div className="mb-8">
         <h1 className="text-3xl font-semibold text-gray-900">Create Account</h1>
 
@@ -83,6 +89,7 @@ const Register = () => {
               name="name"
               value={input.name}
               onChange={handleChange}
+              disabled={loading}
               placeholder="John Doe"
               className="w-full rounded-md border border-gray-300 px-4 py-2 transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
@@ -98,6 +105,7 @@ const Register = () => {
               name="email"
               value={input.email}
               onChange={handleChange}
+              disabled={loading}
               placeholder="you@example.com"
               className="w-full rounded-md border border-gray-300 px-4 py-2 transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
@@ -137,6 +145,7 @@ const Register = () => {
                 name="password"
                 value={input.password}
                 onChange={handleChange}
+                disabled={loading}
                 placeholder="Create password"
                 className="w-full rounded-md border border-gray-300 px-4 py-2 pr-12 transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
               />

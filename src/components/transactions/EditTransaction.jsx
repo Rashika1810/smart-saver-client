@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Calendar, IndianRupee, FileText, Layers, Tag } from "lucide-react";
 import Button from "../ui/Button";
+import Loader from "../ui/Loader";
 import api from "../../api/axios";
 import { expenseCategories, incomeCategories } from "../../utils/categories";
 
@@ -20,6 +21,7 @@ export default function EditTransaction() {
 
   const [form, setForm] = useState(initialState);
   const [loading, setLoading] = useState(true);
+const [saving, setSaving] = useState(false);
 
   const categories =
     form.type === "income" ? incomeCategories : expenseCategories;
@@ -57,36 +59,37 @@ export default function EditTransaction() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      await api.put(`/transactions/${id}`, {
-        ...form,
-        amount: Number(form.amount),
-      });
+  if (saving) return;
 
-      toast.success("Transaction updated successfully");
-      navigate("/transactions");
-    } catch {
-      toast.error("Failed to update transaction");
-    }
-  };
+  setSaving(true);
+
+  try {
+    await api.put(`/transactions/${id}`, {
+      ...form,
+      amount: Number(form.amount),
+    });
+
+    toast.success("Transaction updated successfully");
+    navigate("/transactions");
+  } catch {
+    toast.error("Failed to update transaction");
+  } finally {
+    setSaving(false);
+  }
+};
 
   const inputClass =
     "w-full h-12 rounded-md border border-gray-300 bg-white px-4 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
-  if (loading) {
-    return (
-      <div className="max-w-3xl mx-auto px-6 py-16">
-        <div className="rounded-md border border-gray-200 bg-white p-10 shadow-sm text-center">
-          <div className="h-10 w-10 mx-auto rounded-full border-4 border-blue-600 border-t-transparent animate-spin" />
-          <p className="mt-5 text-gray-500">Loading transaction...</p>
-        </div>
-      </div>
-    );
-  }
+if (loading) {
+  return <Loader />;
+}
 
   return (
+    <>
+    {saving && <Loader/>}
     <div className="max-w-3xl mx-auto px-6 py-10">
       {/* Header */}
 
@@ -229,12 +232,13 @@ export default function EditTransaction() {
               Cancel
             </Button>
 
-            <Button type="submit" variant="info" className="flex-1">
+            <Button type="submit" variant="info" className="flex-1" disabled={saving}>
               Update Transaction
             </Button>
           </div>
         </div>
       </form>
     </div>
+    </>
   );
 }

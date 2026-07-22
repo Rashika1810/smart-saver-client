@@ -17,3 +17,23 @@
   letter-spacing: -0.02em;
   margin: 0 0 1rem;
 }
+@keyframes topLoader {
+  0% {
+    left: -30%;
+    width: 20%;
+  }
+
+  50% {
+    width: 40%;
+  }
+
+  100% {
+    left: 100%;
+    width: 20%;
+  }
+}
+
+.animate-top-loader {
+  position: absolute;
+  animation: topLoader 1.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}

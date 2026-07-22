@@ -4,10 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Button from "../../components/ui/Button";
+import Loader from "../../components/ui/Loader";
 
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [input, setInput] = useState({
     email: "",
@@ -24,6 +26,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
       const { data } = await api.post("/auth/login", input);
 
@@ -38,9 +42,10 @@ const Login = () => {
       }
     } catch (err) {
       toast.error(err?.response?.data?.message || "Server error");
+    } finally {
+      setLoading(false);
     }
   };
-
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
@@ -49,6 +54,7 @@ const Login = () => {
 
   return (
     <>
+    {loading && <Loader/>}
       <div className="mb-8">
         <h1 className="text-3xl font-semibold text-gray-900">Welcome back</h1>
 
@@ -69,8 +75,9 @@ const Login = () => {
               name="email"
               value={input.email}
               onChange={handleChange}
+              disabled={loading}
               placeholder="you@example.com"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+              className="w-full rounded-md border border-gray-300 px-4 py-2 transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -85,8 +92,9 @@ const Login = () => {
                 name="password"
                 value={input.password}
                 onChange={handleChange}
+                disabled={loading}
                 placeholder="Enter password"
-                className="w-full rounded-md border border-gray-300 px-4 py-2 pr-12 transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+                className="w-full rounded-md border border-gray-300 px-4 py-2 pr-12 transition focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
               />
 
               <button

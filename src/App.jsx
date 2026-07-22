@@ -13,6 +13,7 @@ import Transactions from "./pages/Transactions";
 import ImportStatement from "./pages/ImportStatement";
 import AuthPage from "./pages/auth/AuthPage";
 import About from "./pages/About";
+import LoaderDemo from "./pages/LoaderDemo";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/recurring" element={<RecurringTransactions />} />
           <Route path="/import-statement" element={<ImportStatement />} />
           <Route path="/about" element={<About />} />
+          <Route path="/loader-demo" element={<LoaderDemo />} />
           
 
         </Route>
