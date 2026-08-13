@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../api/axios";
 
 import SummaryCards from "../components/common/SummaryCards";
 import MonthlyTrendChart from "../components/analytics/MonthlyTrendChart";
 import CategoryPieChart from "../components/analytics/CategoryPieChart";
 import WeekdaySpendingChart from "../components/analytics/WeekdaySpendingChart";
-import TransactionTableSkeleton from "../components/dashboard/TransactionTableSkeleton";
+import { AnalyticsSkeleton } from "../components/analytics/AnalyticsSkeleton";
 
 const months = [
   { value: "all", label: "All Months" },
@@ -40,49 +40,55 @@ export default function Analytics() {
 
   const [selectedChart, setSelectedChart] = useState("monthly");
 
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization
-  const fetchAnalytics = useCallback(async () => {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    let cancelled = false;
 
-      const params = {
-        year: filters.year,
-      };
+    const fetchAnalytics = async () => {
+      try {
+        setLoading(true);
 
-      if (filters.month !== "all") {
-        params.month = filters.month;
+        const params = {
+          year: filters.year,
+        };
+
+        if (filters.month !== "all") {
+          params.month = filters.month;
+        }
+
+        const { data } = await api.get("/transactions/analytics", {
+          params,
+        });
+
+        if (!cancelled) {
+          setAnalytics(data.data);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Failed to fetch analytics:", error);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
+    };
 
-      const { data } = await api.get("/transactions/analytics", {
-        params,
-      });
+    fetchAnalytics();
 
-      setAnalytics(data.data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    return () => {
+      cancelled = true;
+    };
   }, [filters]);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchAnalytics();
-  }, [fetchAnalytics]);
-
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <TransactionTableSkeleton />
-      </div>
-    );
+  if (!analytics && loading) {
+    return <AnalyticsSkeleton />;
   }
 
   if (!analytics) {
     return (
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="rounded-2xl border border-gray/10 bg-gray/5 backdrop-blur-xl p-16 text-center">
-          <h2 className="text-3xl font-semibold text-gray">
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="rounded-lg border border-gray-200 bg-white p-16 text-center shadow-sm">
+          <h2 className="text-3xl font-semibold text-gray-800">
             No Analytics Available
           </h2>
 
@@ -95,9 +101,12 @@ export default function Analytics() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 px-6 py-8">
-      {/* Header */}
-
+    <div className="mx-auto max-w-7xl space-y-8 px-6 py-8">
+      {loading && (
+        <div className="fixed left-0 right-0 top-0 z-50 h-1 overflow-hidden bg-blue-100">
+          <div className="h-full w-1/3 animate-[loading_1.2s_ease-in-out_infinite] bg-blue-500" />
+        </div>
+      )}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <h1 className="header-title">Analytics</h1>
@@ -109,30 +118,29 @@ export default function Analytics() {
         </div>
 
         {/* Filters */}
-
         <div className="flex gap-3">
           <select
             value={filters.month}
             onChange={(e) =>
-              setFilters({
-                ...filters,
+              setFilters((prev) => ({
+                ...prev,
                 month: e.target.value,
-              })
+              }))
             }
             className="
-  h-12
-  rounded-md
-  border
-  border-gray-300
-  bg-white
-  px-4
-  text-gray-700
-  outline-none
-  transition-colors
-  focus:border-blue-500
-  focus:ring-2
-  focus:ring-blue-100
-"
+              h-12
+              rounded-md
+              border
+              border-gray-300
+              bg-white
+              px-4
+              text-gray-700
+              outline-none
+              transition-colors
+              focus:border-blue-500
+              focus:ring-2
+              focus:ring-blue-100
+            "
           >
             {months.map((month) => (
               <option key={month.value} value={month.value}>
@@ -144,25 +152,25 @@ export default function Analytics() {
           <select
             value={filters.year}
             onChange={(e) =>
-              setFilters({
-                ...filters,
+              setFilters((prev) => ({
+                ...prev,
                 year: e.target.value,
-              })
+              }))
             }
             className="
-  h-12
-  rounded-md
-  border
-  border-gray-300
-  bg-white
-  px-4
-  text-gray-700
-  outline-none
-  transition-colors
-  focus:border-blue-500
-  focus:ring-2
-  focus:ring-blue-100
-"
+              h-12
+              rounded-md
+              border
+              border-gray-300
+              bg-white
+              px-4
+              text-gray-700
+              outline-none
+              transition-colors
+              focus:border-blue-500
+              focus:ring-2
+              focus:ring-blue-100
+            "
           >
             {years.map((year) => (
               <option key={year} value={year}>
@@ -173,16 +181,22 @@ export default function Analytics() {
         </div>
       </div>
 
-      {/* Summary Cards */}
-
-      <SummaryCards summary={analytics.summary} showTransactionCount />
-
-      {/* Chart Card */}
-
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div
+        className={`transition-opacity duration-200 ${
+          loading ? "opacity-60" : "opacity-100"
+        }`}
+      >
+        <SummaryCards summary={analytics.summary} showTransactionCount />
+      </div>
+      <div
+        className={`relative rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-opacity duration-200 ${
+          loading ? "opacity-60" : "opacity-100"
+        }`}
+      >
+        {/* Chart Header */}
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="text-2xl font-semibold text-gray">
+            <h2 className="text-2xl font-semibold text-gray-800">
               {selectedChart === "monthly" && "Monthly Trend"}
               {selectedChart === "category" && "Category Breakdown"}
               {selectedChart === "weekday" && "Weekday Spending"}
@@ -200,23 +214,24 @@ export default function Analytics() {
             </p>
           </div>
 
+          {/* Chart Selector */}
           <select
             value={selectedChart}
             onChange={(e) => setSelectedChart(e.target.value)}
             className="
-  h-12
-  rounded-md
-  border
-  border-gray-300
-  bg-white
-  px-4
-  text-gray-700
-  outline-none
-  transition-colors
-  focus:border-blue-500
-  focus:ring-2
-  focus:ring-blue-100
-"
+              h-12
+              rounded-md
+              border
+              border-gray-300
+              bg-white
+              px-4
+              text-gray-700
+              outline-none
+              transition-colors
+              focus:border-blue-500
+              focus:ring-2
+              focus:ring-blue-100
+            "
           >
             <option value="monthly">Monthly Trend</option>
             <option value="category">Category Breakdown</option>
@@ -224,17 +239,20 @@ export default function Analytics() {
           </select>
         </div>
 
-        {selectedChart === "monthly" && (
-          <MonthlyTrendChart data={analytics.monthlyTrend} />
-        )}
+        {/* Chart */}
+        <div>
+          {selectedChart === "monthly" && (
+            <MonthlyTrendChart data={analytics.monthlyTrend} />
+          )}
 
-        {selectedChart === "category" && (
-          <CategoryPieChart data={analytics.categoryBreakdown} />
-        )}
+          {selectedChart === "category" && (
+            <CategoryPieChart data={analytics.categoryBreakdown} />
+          )}
 
-        {selectedChart === "weekday" && (
-          <WeekdaySpendingChart data={analytics.weekdaySpending} />
-        )}
+          {selectedChart === "weekday" && (
+            <WeekdaySpendingChart data={analytics.weekdaySpending} />
+          )}
+        </div>
       </div>
     </div>
   );
