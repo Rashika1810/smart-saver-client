@@ -7,36 +7,22 @@ import CategoryPieChart from "../components/analytics/CategoryPieChart";
 import WeekdaySpendingChart from "../components/analytics/WeekdaySpendingChart";
 import { AnalyticsSkeleton } from "../components/analytics/AnalyticsSkeleton";
 
-const months = [
-  { value: "all", label: "All Months" },
-  { value: "1", label: "January" },
-  { value: "2", label: "February" },
-  { value: "3", label: "March" },
-  { value: "4", label: "April" },
-  { value: "5", label: "May" },
-  { value: "6", label: "June" },
-  { value: "7", label: "July" },
-  { value: "8", label: "August" },
-  { value: "9", label: "September" },
-  { value: "10", label: "October" },
-  { value: "11", label: "November" },
-  { value: "12", label: "December" },
-];
+import {
+  ANALYTICS_MONTHS,
+  ANALYTICS_CHARTS,
+  getAnalyticsYears,
+  getDefaultAnalyticsFilters,
+} from "../constants/analyticsConstants";
 
 export default function Analytics() {
-  const currentYear = new Date().getFullYear();
-
-  const years = Array.from({ length: 5 }, (_, i) =>
-    (currentYear - i).toString(),
-  );
+  const years = getAnalyticsYears();
 
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [filters, setFilters] = useState({
-    month: "all",
-    year: currentYear.toString(),
-  });
+  const [filters, setFilters] = useState(
+    getDefaultAnalyticsFilters()
+  );
 
   const [selectedChart, setSelectedChart] = useState("monthly");
 
@@ -100,25 +86,35 @@ export default function Analytics() {
     );
   }
 
+  const currentChart = ANALYTICS_CHARTS[selectedChart];
+
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-6 py-8">
+
+      {/* Loading Indicator */}
       {loading && (
         <div className="fixed left-0 right-0 top-0 z-50 h-1 overflow-hidden bg-blue-100">
           <div className="h-full w-1/3 animate-[loading_1.2s_ease-in-out_infinite] bg-blue-500" />
         </div>
       )}
+
+      {/* Header */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="header-title">Analytics</h1>
+          <h1 className="header-title">
+            Analytics
+          </h1>
 
           <p className="mt-2 max-w-2xl text-gray-400">
-            Visualize your income, expenses and spending patterns with detailed
-            financial analytics.
+            Visualize your income, expenses and spending patterns with
+            detailed financial analytics.
           </p>
         </div>
 
         {/* Filters */}
         <div className="flex gap-3">
+
+          {/* Month */}
           <select
             value={filters.month}
             onChange={(e) =>
@@ -142,13 +138,17 @@ export default function Analytics() {
               focus:ring-blue-100
             "
           >
-            {months.map((month) => (
-              <option key={month.value} value={month.value}>
+            {ANALYTICS_MONTHS.map((month) => (
+              <option
+                key={month.value}
+                value={month.value}
+              >
                 {month.label}
               </option>
             ))}
           </select>
 
+          {/* Year */}
           <select
             value={filters.year}
             onChange={(e) =>
@@ -173,7 +173,10 @@ export default function Analytics() {
             "
           >
             {years.map((year) => (
-              <option key={year} value={year}>
+              <option
+                key={year}
+                value={year}
+              >
                 {year}
               </option>
             ))}
@@ -181,43 +184,44 @@ export default function Analytics() {
         </div>
       </div>
 
+      {/* Summary Cards */}
       <div
         className={`transition-opacity duration-200 ${
           loading ? "opacity-60" : "opacity-100"
         }`}
       >
-        <SummaryCards summary={analytics.summary} showTransactionCount />
+        <SummaryCards
+          summary={analytics.summary}
+          showTransactionCount
+        />
       </div>
+
+      {/* Chart Section */}
       <div
         className={`relative rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-opacity duration-200 ${
           loading ? "opacity-60" : "opacity-100"
         }`}
       >
+
         {/* Chart Header */}
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
           <div>
             <h2 className="text-2xl font-semibold text-gray-800">
-              {selectedChart === "monthly" && "Monthly Trend"}
-              {selectedChart === "category" && "Category Breakdown"}
-              {selectedChart === "weekday" && "Weekday Spending"}
+              {currentChart.title}
             </h2>
 
             <p className="mt-1 text-sm text-gray-400">
-              {selectedChart === "monthly" &&
-                "Compare your income and expenses over time."}
-
-              {selectedChart === "category" &&
-                "Understand where most of your money is spent."}
-
-              {selectedChart === "weekday" &&
-                "Discover which days you spend the most."}
+              {currentChart.description}
             </p>
           </div>
 
           {/* Chart Selector */}
           <select
             value={selectedChart}
-            onChange={(e) => setSelectedChart(e.target.value)}
+            onChange={(e) =>
+              setSelectedChart(e.target.value)
+            }
             className="
               h-12
               rounded-md
@@ -233,24 +237,37 @@ export default function Analytics() {
               focus:ring-blue-100
             "
           >
-            <option value="monthly">Monthly Trend</option>
-            <option value="category">Category Breakdown</option>
-            <option value="weekday">Weekday Spending</option>
+            {Object.entries(ANALYTICS_CHARTS).map(
+              ([value, chart]) => (
+                <option
+                  key={value}
+                  value={value}
+                >
+                  {chart.label}
+                </option>
+              )
+            )}
           </select>
         </div>
 
         {/* Chart */}
         <div>
           {selectedChart === "monthly" && (
-            <MonthlyTrendChart data={analytics.monthlyTrend} />
+            <MonthlyTrendChart
+              data={analytics.monthlyTrend}
+            />
           )}
 
           {selectedChart === "category" && (
-            <CategoryPieChart data={analytics.categoryBreakdown} />
+            <CategoryPieChart
+              data={analytics.categoryBreakdown}
+            />
           )}
 
           {selectedChart === "weekday" && (
-            <WeekdaySpendingChart data={analytics.weekdaySpending} />
+            <WeekdaySpendingChart
+              data={analytics.weekdaySpending}
+            />
           )}
         </div>
       </div>

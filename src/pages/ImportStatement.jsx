@@ -5,7 +5,13 @@ import { toast } from "react-toastify";
 import UploadCard from "../components/import/UploadCard";
 import Button from "../components/ui/Button";
 import Loader from "../components/ui/Loader";
+
 import { uploadPhonePeStatement } from "../api/importApi";
+
+import {
+  IMPORT_SUMMARY_FIELDS,
+  IMPORT_STATEMENT_TEXT,
+} from "../constants/importConstants";
 
 export default function ImportStatement() {
   const navigate = useNavigate();
@@ -23,13 +29,15 @@ export default function ImportStatement() {
 
       setSummary(data.summary);
 
-      toast.success(data.message);
+      toast.success(
+        data.message || IMPORT_STATEMENT_TEXT.successMessage
+      );
     } catch (error) {
       console.error(error);
 
       toast.error(
         error.response?.data?.message ||
-          "Failed to import statement."
+          IMPORT_STATEMENT_TEXT.errorMessage
       );
     } finally {
       setLoading(false);
@@ -41,78 +49,59 @@ export default function ImportStatement() {
       {loading && <Loader />}
 
       <div className="max-w-5xl mx-auto px-6 py-8">
+
+        {/* Header */}
         <div className="mb-8">
           <h1 className="header-title">
-            Import PhonePe Statement
+            {IMPORT_STATEMENT_TEXT.title}
           </h1>
 
           <p className="mt-2 text-sm text-slate-500">
-            Upload your PhonePe PDF statement. Duplicate transactions are
-            automatically skipped during import.
+            {IMPORT_STATEMENT_TEXT.description}
           </p>
         </div>
 
+        {/* Upload */}
         <UploadCard
           onUpload={handleUpload}
           loading={loading}
         />
 
+        {/* Import Summary */}
         {summary && (
           <div className="mt-8 rounded-lg border border-slate-200 bg-white p-6">
+
             <h1 className="header-title">
-              Import Summary
+              {IMPORT_STATEMENT_TEXT.summaryTitle}
             </h1>
 
             <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-              <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">
-                  Total Found
-                </p>
+              {IMPORT_SUMMARY_FIELDS.map((field) => (
+                <div
+                  key={field.key}
+                  className={`
+                    rounded-md
+                    border
+                    p-4
+                    ${field.containerClass}
+                  `}
+                >
+                  <p className="text-sm text-slate-500">
+                    {field.label}
+                  </p>
 
-                <p className="mt-1 text-xl font-semibold text-slate-800">
-                  {summary.totalFound}
-                </p>
-              </div>
-
-              <div className="rounded-md border border-green-100 bg-green-50 p-4">
-                <p className="text-sm text-slate-500">
-                  Imported
-                </p>
-
-                <p className="mt-1 text-xl font-semibold text-green-700">
-                  {summary.imported}
-                </p>
-              </div>
-
-              <div className="rounded-md border border-yellow-100 bg-yellow-50 p-4">
-                <p className="text-sm text-slate-500">
-                  Duplicates
-                </p>
-
-                <p className="mt-1 text-xl font-semibold text-yellow-700">
-                  {summary.duplicates}
-                </p>
-              </div>
-
-              <div className="rounded-md border border-red-100 bg-red-50 p-4">
-                <p className="text-sm text-slate-500">
-                  Invalid
-                </p>
-
-                <p className="mt-1 text-xl font-semibold text-red-700">
-                  {summary.invalid}
-                </p>
-              </div>
-
-              <div className="rounded-md border border-blue-100 bg-blue-50 p-4">
-                <p className="text-sm text-slate-500">
-                  Valid
-                </p>
-
-                <p className="mt-1 text-xl font-semibold text-blue-700">
-                  {summary.valid}
-                </p>
-              </div>
+                  <p
+                    className={`
+                      mt-1
+                      text-xl
+                      font-semibold
+                      ${field.valueClass}
+                    `}
+                  >
+                    {summary[field.key]}
+                  </p>
+                </div>
+              ))}
             </div>
 
             <Button
@@ -120,7 +109,7 @@ export default function ImportStatement() {
               className="mt-8"
               onClick={() => navigate("/transactions")}
             >
-              View Transactions
+              {IMPORT_STATEMENT_TEXT.viewTransactionsLabel}
             </Button>
           </div>
         )}
