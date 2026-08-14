@@ -1,12 +1,6 @@
 import { useState } from "react";
 import {
-  Wallet,
-  Upload,
-  Receipt,
-  Repeat,
-  BarChart3,
   Lightbulb,
-  Bot,
   ShieldCheck,
   CheckCircle,
   ChevronLeft,
@@ -14,70 +8,11 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button";
+import { ABOUT_FEATURE_LIST, ABOUT_FEATURES } from "../constants/aboutConstants";
 
 export default function About() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-
-  const features = [
-    {
-      icon: Wallet,
-      title: "Set Opening Balance",
-      description:
-        "Begin by setting your opening balance. You can include your total balance (cash + cashless) or only your cashless balance. Cash can always be added later through manual transactions.",
-    },
-    {
-      icon: Upload,
-      title: "Import PhonePe Statement",
-      description:
-        "Upload your PhonePe transaction statement and SmartSaver will automatically import your UPI transactions while detecting and removing duplicate records.",
-    },
-    {
-      icon: Receipt,
-      title: "Add Cash Transactions",
-      description:
-        "Easily record cash income and expenses manually so all your finances stay organized in one place.",
-    },
-    {
-      icon: Repeat,
-      title: "Recurring Transactions",
-      description:
-        "Schedule recurring income or expenses as Daily, Weekly, or Monthly. SmartSaver automatically creates those transactions for you.",
-    },
-    {
-      icon: BarChart3,
-      title: "View Analytics",
-      description:
-        "Analyze your spending with Monthly Spending Charts, Category-wise Expense Charts, and Weekday Spending Analysis to better understand your financial habits.",
-    },
-    {
-      icon: Lightbulb,
-      title: "AI Financial Insights",
-      description:
-        "Click the bulb icon anytime to receive AI-generated insights about your spending behavior, budget, major expenses, and personalized saving suggestions.",
-    },
-    {
-      icon: Bot,
-      title: "AI Financial Chatbot",
-      description:
-        "Chat with your AI Financial Assistant and ask questions about your balance, spending, savings, categories, merchants, and transactions to get personalized financial answers.",
-    },
-  ];
-
-  const featureList = [
-    "Opening Balance Management",
-    "PhonePe Statement Import",
-    "Duplicate Transaction Detection",
-    "Cash & Cashless Tracking",
-    "Recurring Daily, Weekly & Monthly Transactions",
-    "Monthly Spending Charts",
-    "Category-wise Expense Analysis",
-    "Weekday Spending Analysis",
-    "AI Budget & Spending Insights",
-    "AI Financial Chatbot",
-    "Personalized Financial Answers",
-    "Secure Transaction Management",
-  ];
 
   // Number of cards shown per slide
   const cardsPerSlide = 3;
@@ -85,26 +20,21 @@ export default function About() {
   // Create groups of cards
   const slides = [];
 
-  for (let i = 0; i < features.length; i += cardsPerSlide) {
-    slides.push(features.slice(i, i + cardsPerSlide));
+  for (let i = 0; i < ABOUT_FEATURES.length; i += cardsPerSlide) {
+    slides.push(ABOUT_FEATURES.slice(i, i + cardsPerSlide));
   }
 
   const nextSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === slides.length - 1 ? 0 : prev + 1
-    );
+    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
   };
 
   const previousSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === 0 ? slides.length - 1 : prev - 1
-    );
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-6 md:px-8 py-10">
-
         {/* Hero */}
         <section className="text-center mb-12">
           <h1 className="text-3xl font-semibold text-gray-900">
@@ -112,17 +42,14 @@ export default function About() {
           </h1>
 
           <p className="mt-6 max-w-3xl mx-auto text-base text-gray-500 leading-8">
-            SmartSaver is your intelligent personal finance companion that
-            helps you manage expenses, import UPI statements, automate
-            recurring transactions, visualize spending, and get personalized
-            AI-powered financial insights—all in one place.
+            SmartSaver is your intelligent personal finance companion that helps
+            you manage expenses, import UPI statements, automate recurring
+            transactions, visualize spending, and get personalized AI-powered
+            financial insights—all in one place.
           </p>
 
           <div className="mt-8">
-            <Button
-              variant="info"
-              onClick={() => navigate("/")}
-            >
+            <Button variant="info" onClick={() => navigate("/")}>
               Start Using SmartSaver
             </Button>
           </div>
@@ -136,8 +63,8 @@ export default function About() {
 
           <p className="text-gray-600 leading-8">
             Whether you spend using cash, UPI, or bank transfers, SmartSaver
-            keeps your finances organized. Import your PhonePe statement,
-            track cash transactions, automate recurring expenses, and
+            keeps your finances organized. Import your PhonePe statement, track
+            cash transactions, create flexible recurring transactions, and
             understand your spending with detailed charts, AI-powered insights,
             and an intelligent financial chatbot.
           </p>
@@ -155,7 +82,6 @@ export default function About() {
 
           {/* Slider */}
           <div className="relative">
-
             {/* Previous */}
             <button
               onClick={previousSlide}
@@ -196,10 +122,7 @@ export default function About() {
                 }}
               >
                 {slides.map((slide, slideIndex) => (
-                  <div
-                    key={slideIndex}
-                    className="w-full flex-shrink-0"
-                  >
+                  <div key={slideIndex} className="w-full flex-shrink-0">
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {slide.map((feature) => {
                         const Icon = feature.icon;
@@ -304,7 +227,7 @@ export default function About() {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-3">
-            {featureList.map((feature) => (
+            {ABOUT_FEATURE_LIST.map((feature) => (
               <div
                 key={feature}
                 className="flex items-start gap-3 text-gray-700"
@@ -354,10 +277,7 @@ export default function About() {
         <section className="bg-gray-200 rounded-md p-8 mb-12">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3">
-              <Lightbulb
-                size={24}
-                className="text-blue-600"
-              />
+              <Lightbulb size={24} className="text-blue-600" />
 
               <h2 className="text-2xl font-semibold text-gray-900">
                 AI-Powered Financial Intelligence
@@ -366,11 +286,11 @@ export default function About() {
 
             <p className="mt-5 text-gray-600 text-base leading-8">
               SmartSaver provides two ways to get intelligent financial
-              assistance. Use the bulb on your dashboard to receive
-              personalized insights about your spending, budget, and saving
-              opportunities. You can also chat with the AI Financial Assistant
-              to ask questions about your balance, spending categories,
-              merchants, transactions, and savings.
+              assistance. Use the bulb on your dashboard to receive personalized
+              insights about your spending, budget, and saving opportunities.
+              You can also chat with the AI Financial Assistant to ask questions
+              about your balance, spending categories, merchants, transactions,
+              and savings.
             </p>
           </div>
         </section>

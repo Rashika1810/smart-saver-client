@@ -45,15 +45,15 @@ export default function RecurringTransactions() {
     <div className="mx-auto max-w-7xl space-y-8 px-6 py-8">
       {/* Header */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-       <div>
-  <h1 className="header-title">Recurring Transactions</h1>
+        <div>
+          <h1 className="header-title">Recurring Transactions</h1>
 
-  <p className="mt-2 text-sm max-w-2xl text-gray-500">
-    Manage recurring cash transactions like salaries, rent, and regular
-    payments. Online transactions are managed through imported PhonePe
-    statements.
-  </p>
-</div>
+          <p className="mt-2 text-sm max-w-2xl text-gray-500">
+            Manage recurring cash transactions like salaries, rent, and regular
+            payments. Online transactions are managed through imported PhonePe
+            statements.
+          </p>
+        </div>
 
         <div className="flex flex-wrap gap-3">
           <Button

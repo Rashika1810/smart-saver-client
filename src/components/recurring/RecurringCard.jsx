@@ -1,13 +1,50 @@
 import { toast } from "react-toastify";
 import {
   CalendarDays,
-  IndianRupee,
   Pencil,
   Power,
   Trash2,
 } from "lucide-react";
 
 import api from "../../api/axios";
+
+const DAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+function getFrequencyLabel(recurring) {
+  switch (recurring.frequency) {
+    case "daily":
+      return "Daily";
+
+    case "weekly":
+      return "Weekly";
+
+    case "monthly":
+      return "Monthly";
+
+    case "yearly":
+      return "Yearly";
+
+    case "custom": {
+      const days = (recurring.daysOfWeek || [])
+        .slice()
+        .sort((a, b) => a - b)
+        .map((day) => DAYS[day]);
+
+      return days.length ? days.join(", ") : "Specific Days";
+    }
+
+    default:
+      return recurring.frequency;
+  }
+}
 
 export default function RecurringCard({
   recurring,
@@ -21,7 +58,6 @@ export default function RecurringCard({
       await api.delete(`/recurring/${recurring._id}`);
 
       toast.success("Recurring transaction deleted");
-
       refresh();
     } catch {
       toast.error("Delete failed");
@@ -47,136 +83,99 @@ export default function RecurringCard({
       year: "numeric",
     });
 
+  const isIncome = recurring.type === "income";
+
   return (
-    <div className="w-full max-w-sm rounded-md border border-gray-200 bg-white p-4 transition-shadow duration-200 hover:shadow-sm">
-
+    <div className="w-full max-w-md rounded-md border border-gray-200 bg-white p-4 transition-shadow duration-200 hover:shadow-sm">
       {/* Header */}
-      <div className="flex items-start justify-between">
-
-        <div>
-          <h2 className="text-base font-semibold text-gray-900">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="truncate text-base font-semibold text-gray-900">
             {recurring.description || recurring.category}
           </h2>
 
-          <p className="mt-1 capitalize text-sm text-gray-500">
+          <p className="mt-0.5 text-xs capitalize text-gray-500">
             {recurring.category}
           </p>
         </div>
 
         <span
-          className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+          className={`shrink-0 rounded-full px-2 py-1 text-[11px] font-medium ${
             recurring.active
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-100 text-gray-600"
+              ? "bg-green-50 text-green-700"
+              : "bg-gray-100 text-gray-500"
           }`}
         >
           {recurring.active ? "Active" : "Inactive"}
         </span>
-
       </div>
 
-
-      {/* Amount */}
-      <div className="mt-4 flex items-center gap-2">
-
-        <IndianRupee
-          size={16}
-          className="text-blue-600"
-        />
-
+      {/* Main information */}
+      <div className="mt-5 flex items-end justify-between">
         <div>
-          <p className="text-xs text-gray-500">
-            Amount
-          </p>
+          <p className="text-xs text-gray-400">Amount</p>
 
-          <h3 className="text-xl font-semibold text-gray-900">
-            ₹{Number(recurring.amount).toLocaleString()}
-          </h3>
-        </div>
-
-      </div>
-
-
-      {/* Details */}
-      <div className="mt-4 space-y-2 text-sm">
-
-        <div className="flex justify-between">
-          <span className="text-gray-500">
-            Type
-          </span>
-
-          <span
-            className={`font-medium ${
-              recurring.type === "income"
-                ? "text-green-600"
-                : "text-red-600"
+          <p
+            className={`mt-0.5 text-2xl font-semibold tracking-tight ${
+              isIncome ? "text-green-600" : "text-gray-900"
             }`}
           >
-            {recurring.type}
-          </span>
+            ₹{Number(recurring.amount).toLocaleString("en-IN")}
+          </p>
         </div>
 
+        <div className="text-right">
+          <p className="text-xs text-gray-400">Frequency</p>
 
-        <div className="flex justify-between">
-          <span className="text-gray-500">
-            Frequency
-          </span>
-
-          <span className="capitalize font-medium text-gray-800">
-            {recurring.frequency}
-          </span>
+          <p className="mt-0.5 max-w-[170px] text-sm font-medium text-gray-800">
+            {getFrequencyLabel(recurring)}
+          </p>
         </div>
-
-
-        <div className="flex justify-between items-center">
-          <span className="flex items-center gap-1 text-gray-500">
-            <CalendarDays size={14} />
-            Starts
-          </span>
-
-          <span className="font-medium text-gray-800">
-            {formatDate(recurring.startDate)}
-          </span>
-        </div>
-
       </div>
 
+      {/* Start date */}
+      <div className="mt-4 flex items-center gap-2 border-t border-gray-100 pt-3">
+        <CalendarDays size={14} className="text-gray-400" />
+
+        <span className="text-xs text-gray-500">
+          Starts
+        </span>
+
+        <span className="text-xs font-medium text-gray-800">
+          {formatDate(recurring.startDate)}
+        </span>
+      </div>
 
       {/* Actions */}
-      <div className="mt-4 flex justify-end gap-2">
-
+      <div className="mt-3 flex justify-end gap-1.5">
         <button
           onClick={() => onEdit(recurring)}
           title="Edit"
-          className="rounded-md border border-gray-300 p-2 text-gray-600 transition hover:bg-gray-100"
+          className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-800"
         >
-          <Pencil size={16} />
+          <Pencil size={15} />
         </button>
-
 
         <button
           onClick={toggleStatus}
           title={recurring.active ? "Disable" : "Enable"}
           className={`rounded-md p-2 transition ${
             recurring.active
-              ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
-              : "bg-green-100 text-green-700 hover:bg-green-200"
+              ? "text-amber-600 hover:bg-amber-50"
+              : "text-green-600 hover:bg-green-50"
           }`}
         >
-          <Power size={16} />
+          <Power size={15} />
         </button>
-
 
         <button
           onClick={deleteRecurring}
           title="Delete"
-          className="rounded-md bg-red-50 p-2 text-red-600 transition hover:bg-red-100"
+          className="rounded-md p-2 text-red-500 transition hover:bg-red-50"
         >
-          <Trash2 size={16} />
+          <Trash2 size={15} />
         </button>
-
       </div>
-
     </div>
   );
 }
