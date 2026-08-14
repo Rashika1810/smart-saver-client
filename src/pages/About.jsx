@@ -123,24 +123,27 @@ export default function About() {
               >
                 {slides.map((slide, slideIndex) => (
                   <div key={slideIndex} className="w-full flex-shrink-0">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid items-stretch md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {slide.map((feature) => {
                         const Icon = feature.icon;
 
                         return (
                           <div
                             key={feature.title}
-                            className="
-                              bg-white
-                              border
-                              border-gray-200
-                              rounded-md
-                              shadow-sm
-                              p-6
-                              min-h-[190px]
-                              hover:border-blue-200
-                              transition
-                            "
+                             className="
+    h-full
+    min-h-[220px]
+    bg-white
+    border
+    border-gray-200
+    rounded-md
+    shadow-sm
+    p-6
+    flex
+    flex-col
+    hover:border-blue-200
+    transition
+  "
                           >
                             <div className="flex items-center gap-3 mb-4">
                               <Icon
